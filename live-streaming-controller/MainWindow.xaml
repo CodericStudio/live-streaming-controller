@@ -3,10 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:live_streaming_controller"
+        xmlns:res="clr-namespace:live_streaming_controller.Resources"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{x:Static res:Strings.ApplicationName}"
+        ResizeMode="NoResize"
+        Height="150" Width="300">
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25px" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Label Content="{x:Static res:Strings.Status}" FontSize="14" Margin="4,0,0,0" Grid.Column="0" Grid.Row="0" />
+        <!-- TODO: Replace content text -->
+        <Label Content="&lt;Status&gt;" FontSize="14" Name="statusIndicator" Grid.Column="1" Grid.Row="0" />
+        <!-- TODO: Replace content text -->
+        <Button Content="Start Streaming" FontSize="16px" Height="60px" Margin="10" Name="toggleButton" Width="260px" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" />
     </Grid>
 </Window>
