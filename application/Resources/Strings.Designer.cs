@@ -77,5 +77,41 @@ namespace LiteralLifeChurch.LiveStreamingController.Resources {
                 return ResourceManager.GetString("Status", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking....
+        /// </summary>
+        public static string StatusChecking {
+            get {
+                return ResourceManager.GetString("StatusChecking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Ready.
+        /// </summary>
+        public static string StatusNotReady {
+            get {
+                return ResourceManager.GetString("StatusNotReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        public static string StatusReady {
+            get {
+                return ResourceManager.GetString("StatusReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting.
+        /// </summary>
+        public static string StatusStarting {
+            get {
+                return ResourceManager.GetString("StatusStarting", resourceCulture);
+            }
+        }
     }
 }

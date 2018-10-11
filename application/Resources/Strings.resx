@@ -124,4 +124,16 @@
     <value>Status: </value>
     <comment>Indicates the status of the services (Not Ready, Preparing, Running), used like "Status: Running"</comment>
   </data>
+  <data name="StatusChecking" xml:space="preserve">
+    <value>Checking...</value>
+  </data>
+  <data name="StatusNotReady" xml:space="preserve">
+    <value>Not Ready</value>
+  </data>
+  <data name="StatusReady" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="StatusStarting" xml:space="preserve">
+    <value>Starting</value>
+  </data>
 </root>
