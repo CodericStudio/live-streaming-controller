@@ -1,8 +1,8 @@
 ﻿using System.Windows.Media;
 
-namespace LiteralLifeChurch.LiveStreamingController.Models.Status
+namespace LiteralLifeChurch.LiveStreamingController.Models.Azure.Status
 {
-    public class ServiceStatusDesignUpdateModel : IStatus
+    internal class ServiceStatusDesignUpdateModel : IStatusModel
     {
 
         public string StatusText { get; set; }

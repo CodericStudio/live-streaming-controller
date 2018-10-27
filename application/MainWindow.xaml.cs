@@ -29,7 +29,7 @@ namespace LiteralLifeChurch.LiveStreamingController
             statusIndicator.Content = Strings.StatusChecking;
             statusIndicator.Foreground = Brushes.Black;
 
-            viewModel.GetStatus()
+            viewModel.Status
                 .SubscribeOn(NewThreadScheduler.Default)
                 .ObserveOn(DispatcherScheduler.Current)
                 .Subscribe(status =>
@@ -39,7 +39,7 @@ namespace LiteralLifeChurch.LiveStreamingController
                 }, error =>
                 {
                     statusIndicator.Content = Strings.StatusNotReady;
-                    statusIndicator.Foreground = Brushes.Black;
+                    statusIndicator.Foreground = Brushes.Red;
                 });
         }
     }

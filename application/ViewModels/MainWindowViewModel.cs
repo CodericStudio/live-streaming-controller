@@ -1,7 +1,8 @@
-﻿using LiteralLifeChurch.LiveStreamingController.Enums;
-using LiteralLifeChurch.LiveStreamingController.Models.Status;
+﻿using LiteralLifeChurch.LiveStreamingController.Enums.Azure;
+using LiteralLifeChurch.LiveStreamingController.Models.Azure.Status;
 using LiteralLifeChurch.LiveStreamingController.Resources;
 using LiteralLifeChurch.LiveStreamingController.Services;
+using LiteralLifeChurch.LiveStreamingController.Services.Azure;
 using System;
 using System.Reactive.Linq;
 using System.Windows.Media;
@@ -10,24 +11,14 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
 {
     internal class MainWindowViewModel : IViewModel
     {
-
         private StatusService StatusService = new StatusService();
 
-        public IObservable<ServiceStatusDesignUpdateModel> GetStatus()
-        {
-
-            return StatusService.GetStatus()
+        public IObservable<ServiceStatusDesignUpdateModel> Status =>
+            StatusService.Status
                 .Select(status =>
                 {
                     switch (status.Summary)
                     {
-                        case StatusType.NotReady:
-                            return new ServiceStatusDesignUpdateModel()
-                            {
-                                StatusText = Strings.StatusNotReady,
-                                StatusTextColor = Brushes.Red
-                            };
-
                         case StatusType.Ready:
                             return new ServiceStatusDesignUpdateModel()
                             {
@@ -46,10 +37,9 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
                             return new ServiceStatusDesignUpdateModel()
                             {
                                 StatusText = Strings.StatusNotReady,
-                                StatusTextColor = Brushes.Black
+                                StatusTextColor = Brushes.Red
                             };
                     };
                 });
-        }
     }
 }
