@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LiteralLifeChurch.LiveStreamingController.Repositories.Azure.MediaServices
 {
-    internal class AzureConfigurationRepository : IRepository
+    internal class MediaServicesRepository : IRepository
     {
         public static List<string> Channels =>
             Environment.GetEnvironmentVariable(MediaServicesConstants.Channels).Split(',').ToList();

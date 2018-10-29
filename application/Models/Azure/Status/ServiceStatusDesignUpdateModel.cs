@@ -1,11 +1,11 @@
-﻿using System.Windows.Media;
+﻿using Windows.UI;
 
 namespace LiteralLifeChurch.LiveStreamingController.Models.Azure.Status
 {
     internal class ServiceStatusDesignUpdateModel : IStatusModel
     {
 
-        public string StatusText { get; set; }
-        public SolidColorBrush StatusTextColor { get; set; }
+        public Color StatusTextColor { get; set; }
+        public string StatusTextResource { get; set; }
     }
 }

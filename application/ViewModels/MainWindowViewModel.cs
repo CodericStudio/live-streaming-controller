@@ -1,11 +1,9 @@
 ﻿using LiteralLifeChurch.LiveStreamingController.Enums.Azure;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.Status;
-using LiteralLifeChurch.LiveStreamingController.Resources;
-using LiteralLifeChurch.LiveStreamingController.Services;
 using LiteralLifeChurch.LiveStreamingController.Services.Azure;
 using System;
 using System.Reactive.Linq;
-using System.Windows.Media;
+using Windows.UI;
 
 namespace LiteralLifeChurch.LiveStreamingController.ViewModels
 {
@@ -22,22 +20,22 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
                         case StatusType.Ready:
                             return new ServiceStatusDesignUpdateModel()
                             {
-                                StatusText = Strings.StatusReady,
-                                StatusTextColor = Brushes.Green
+                                StatusTextColor = Colors.Green,
+                                StatusTextResource = "StatusReady"
                             };
 
                         case StatusType.Starting:
                             return new ServiceStatusDesignUpdateModel()
                             {
-                                StatusText = Strings.StatusStarting,
-                                StatusTextColor = Brushes.Goldenrod
+                                StatusTextColor = Colors.Goldenrod,
+                                StatusTextResource = "StatusStarting"
                             };
 
                         default:
                             return new ServiceStatusDesignUpdateModel()
                             {
-                                StatusText = Strings.StatusNotReady,
-                                StatusTextColor = Brushes.Red
+                                StatusTextColor = Colors.Red,
+                                StatusTextResource = "StatusNotReady"
                             };
                     };
                 });
