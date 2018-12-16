@@ -97,11 +97,11 @@
     </Compile>
     <Compile Include="Enums\Azure\StatusType.cs" />
     <Compile Include="Exceptions\Azure\AccessPolicyException.cs" />
-    <Compile Include="Exceptions\Azure\AssetCreationException.cs" />
+    <Compile Include="Exceptions\Azure\AssetException.cs" />
     <Compile Include="Exceptions\Azure\AzureAuthenticationException.cs" />
     <Compile Include="Exceptions\Azure\AzureException.cs" />
     <Compile Include="Exceptions\Azure\LocatorException.cs" />
-    <Compile Include="Exceptions\Azure\ProgramCreationException.cs" />
+    <Compile Include="Exceptions\Azure\ProgramException.cs" />
     <Compile Include="Exceptions\Azure\ServiceStatusException.cs" />
     <Compile Include="Exceptions\Azure\StartUpException.cs" />
     <Compile Include="Exceptions\Azure\StatusesDoNotMatchException.cs" />
@@ -112,6 +112,7 @@
     <Compile Include="Models\Azure\DataCreation\CreateAccessPolicyModel.cs" />
     <Compile Include="Models\Azure\DataCreation\CreateLocatorModel.cs" />
     <Compile Include="Models\Azure\DataCreation\CreateProgramModel.cs" />
+    <Compile Include="Models\Azure\Workflow\AssetStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\Workflow\LocatorStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\IAzureModel.cs" />
     <Compile Include="Models\Azure\MediaServices\AssetModel.cs" />
@@ -125,9 +126,8 @@
     <Compile Include="Models\Azure\Status\ServiceStatusDesignUpdateModel.cs" />
     <Compile Include="Models\Azure\Status\ServiceStatusModel.cs" />
     <Compile Include="Models\Azure\Workflow\AccessPolicyStepWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\AssetWorkflowModel.cs" />
     <Compile Include="Models\Azure\Workflow\IWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\ProgramWorkflowModel.cs" />
+    <Compile Include="Models\Azure\Workflow\ProgramStepWorkflowModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Azure\Authentication\AuthenticationConfigurationConstants.cs" />
