@@ -96,41 +96,65 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums\Azure\StatusType.cs" />
+    <Compile Include="Exceptions\Azure\AccessPolicyException.cs" />
+    <Compile Include="Exceptions\Azure\AssetCreationException.cs" />
     <Compile Include="Exceptions\Azure\AzureAuthenticationException.cs" />
     <Compile Include="Exceptions\Azure\AzureException.cs" />
+    <Compile Include="Exceptions\Azure\LocatorException.cs" />
+    <Compile Include="Exceptions\Azure\ProgramCreationException.cs" />
     <Compile Include="Exceptions\Azure\ServiceStatusException.cs" />
+    <Compile Include="Exceptions\Azure\StartUpException.cs" />
+    <Compile Include="Exceptions\Azure\StatusesDoNotMatchException.cs" />
     <Compile Include="Exceptions\LiveStreamingControllerException.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Azure\DataCreation\CreateAccessPolicyModel.cs" />
+    <Compile Include="Models\Azure\DataCreation\CreateLocatorModel.cs" />
+    <Compile Include="Models\Azure\DataCreation\CreateProgramModel.cs" />
+    <Compile Include="Models\Azure\Workflow\LocatorStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\IAzureModel.cs" />
+    <Compile Include="Models\Azure\MediaServices\AssetModel.cs" />
     <Compile Include="Models\Azure\MediaServices\ChannelModel.cs" />
+    <Compile Include="Models\Azure\DataCreation\CreateAssetModel.cs" />
+    <Compile Include="Models\Azure\DataCreation\IDataCreationModel.cs" />
     <Compile Include="Models\Azure\MediaServices\EndpointModel.cs" />
     <Compile Include="Models\Azure\MediaServices\IMediaServicesModel.cs" />
     <Compile Include="Models\Azure\MediaServices\ProgramModel.cs" />
     <Compile Include="Models\Azure\Status\IStatusModel.cs" />
     <Compile Include="Models\Azure\Status\ServiceStatusDesignUpdateModel.cs" />
     <Compile Include="Models\Azure\Status\ServiceStatusModel.cs" />
+    <Compile Include="Models\Azure\Workflow\AccessPolicyStepWorkflowModel.cs" />
+    <Compile Include="Models\Azure\Workflow\AssetWorkflowModel.cs" />
+    <Compile Include="Models\Azure\Workflow\IWorkflowModel.cs" />
+    <Compile Include="Models\Azure\Workflow\ProgramWorkflowModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Azure\Authentication\AuthenticationConfigurationConstants.cs" />
     <Compile Include="Repositories\Azure\Authentication\AuthenticationConfigurationRepository.cs" />
     <Compile Include="Repositories\Azure\Authentication\TokenRepository.cs" />
+    <Compile Include="Repositories\Azure\MediaServices\MediaServicesConfigurationRepository.cs" />
+    <Compile Include="Repositories\Azure\MediaServices\MediaServicesConfigurationConstants.cs" />
     <Compile Include="Repositories\Azure\MediaServices\MediaServicesRepository.cs" />
-    <Compile Include="Repositories\Azure\MediaServices\MediaServicesConstants.cs" />
+    <Compile Include="Repositories\Firebase\FirebaseConfigurationConstants.cs" />
+    <Compile Include="Repositories\Firebase\FirebaseConfigurationRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Services\Azure\Authentication\AzureAuthenticationConstants.cs" />
     <Compile Include="Services\Azure\Authentication\AzureAuthenticationService.cs" />
+    <Compile Include="Services\Azure\MediaServices\AssetService.cs" />
     <Compile Include="Services\Azure\MediaServices\ChannelService.cs" />
+    <Compile Include="Services\Azure\MediaServices\AccessPolicyService.cs" />
+    <Compile Include="Services\Azure\MediaServices\LocatorService.cs" />
     <Compile Include="Services\Azure\MediaServices\MediaService.cs" />
     <Compile Include="Services\Azure\MediaServices\MediaServicesConstants.cs" />
     <Compile Include="Services\Azure\MediaServices\ProgramService.cs" />
     <Compile Include="Services\Azure\MediaServices\StreamingEndpointService.cs" />
-    <Compile Include="Services\Azure\StatusService.cs" />
+    <Compile Include="Services\Azure\AggregationService.cs" />
+    <Compile Include="Services\Firebase\FirebaseService.cs" />
     <Compile Include="Services\Network\RetryRestClient.cs" />
     <Compile Include="Utilities\HttpUtils.cs" />
     <Compile Include="ViewModels\IViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MainPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -160,6 +184,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FirebaseDatabase.net">
+      <Version>3.3.3</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
     </PackageReference>

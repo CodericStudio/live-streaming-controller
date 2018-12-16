@@ -15,7 +15,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Utilities
 
         public static bool IsResponseValid(IRestResponse response)
         {
-            if (response == null || string.IsNullOrEmpty(response.Content) || !Is2xx(response.StatusCode))
+            if (response == null || !Is2xx(response.StatusCode))
             {
                 return false;
             }

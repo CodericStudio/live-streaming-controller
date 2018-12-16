@@ -1,4 +1,5 @@
-﻿using LiteralLifeChurch.LiveStreamingController.ViewModels;
+﻿using LiteralLifeChurch.LiveStreamingController.Services.Firebase;
+using LiteralLifeChurch.LiveStreamingController.ViewModels;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -6,6 +7,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -14,7 +16,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 {
     public sealed partial class MainPage : Page
     {
-        private MainWindowViewModel viewModel = new MainWindowViewModel();
+        private MainPageViewModel viewModel = new MainPageViewModel();
 
         public MainPage()
         {
@@ -30,21 +32,26 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void InitializeStatus()
         {
-            ResourceLoader loader = ResourceLoader.GetForCurrentView();
-            StatusIndicator.Foreground = new SolidColorBrush(Colors.Black);
-            StatusIndicator.Text = loader.GetString("StatusChecking");
+            PrepareUiForLoading("StatusChecking", Colors.Black);
 
             viewModel.Status
+                .SelectMany(status =>
+                {
+                    viewModel.CacheServices(status);
+                    return Observable.Return(status);
+                })
+                .SelectMany(status =>
+                {
+                    return viewModel.MapToDisplayableStatus(status);
+                })
                 .SubscribeOn(NewThreadScheduler.Default)
                 .ObserveOnDispatcher()
                 .Subscribe(status =>
                 {
-                    StatusIndicator.Foreground = new SolidColorBrush(status.StatusTextColor);
-                    StatusIndicator.Text = loader.GetString(status.StatusTextResource);
+                    DisplayOutcomeOnUi(status.StatusTextResource, status.StatusTextColor);
                 }, error =>
                 {
-                    StatusIndicator.Foreground = new SolidColorBrush(Colors.Red);
-                    StatusIndicator.Text = loader.GetString("StatusNotReady");
+                    DisplayOutcomeOnUi("StatusNotReady", Colors.Red);
                 });
         }
 
@@ -52,6 +59,42 @@ namespace LiteralLifeChurch.LiveStreamingController
         {
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(300, 150));
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+        }
+
+        private void StreamButtonClick(object sender, RoutedEventArgs e)
+        {
+            PrepareUiForLoading("StatusStarting", Colors.Goldenrod);
+
+            viewModel.StartStreaming
+                .SubscribeOn(NewThreadScheduler.Default)
+                .ObserveOnDispatcher()
+                .Subscribe(outcome =>
+                {
+                    DisplayOutcomeOnUi("StatusReady", Colors.Green);
+                }, error =>
+                {
+                    DisplayOutcomeOnUi("StatusNotReady", Colors.Red);
+                });
+        }
+
+        private void DisplayOutcomeOnUi(string indicatorText, Color indicatorColor)
+        {
+            ResourceLoader loader = ResourceLoader.GetForCurrentView();
+
+            ProgressBar.Visibility = Visibility.Collapsed;
+            StreamingButton.IsEnabled = true;
+            StatusIndicator.Foreground = new SolidColorBrush(indicatorColor);
+            StatusIndicator.Text = loader.GetString(indicatorText);
+        }
+
+        private void PrepareUiForLoading(string indicatorText, Color indicatorColor)
+        {
+            ResourceLoader loader = ResourceLoader.GetForCurrentView();
+
+            ProgressBar.Visibility = Visibility.Visible;
+            StreamingButton.IsEnabled = false;
+            StatusIndicator.Foreground = new SolidColorBrush(indicatorColor);
+            StatusIndicator.Text = loader.GetString(indicatorText);
         }
     }
 }

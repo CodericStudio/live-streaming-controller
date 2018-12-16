@@ -2,7 +2,7 @@
 
 namespace LiteralLifeChurch.LiveStreamingController.Models.Azure.MediaServices
 {
-    internal class EndpointModel : IMediaServicesModel
+    internal class StreamingEndpointModel : IMediaServicesModel
     {
         public string Id { get; set; }
         public string Name { get; set; }

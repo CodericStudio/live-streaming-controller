@@ -1,18 +1,11 @@
-﻿using System;
+﻿using LiteralLifeChurch.LiveStreamingController.Models.Azure.MediaServices;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LiteralLifeChurch.LiveStreamingController.Repositories.Azure.MediaServices
 {
-    internal class MediaServicesRepository : IRepository
+    internal class MediaServicesRepository
     {
-        public static List<string> Channels =>
-            Environment.GetEnvironmentVariable(MediaServicesConstants.Channels).Split(',').ToList();
-
-        public static List<string> Programs =>
-            Environment.GetEnvironmentVariable(MediaServicesConstants.Programs).Split(',').ToList();
-
-        public static List<string> StreamingEndpoints =>
-            Environment.GetEnvironmentVariable(MediaServicesConstants.StreamingEndpoints).Split(',').ToList();
+        public static List<ChannelModel> Channels = null;
+        public static List<StreamingEndpointModel> Endpoints = null;
     }
 }
