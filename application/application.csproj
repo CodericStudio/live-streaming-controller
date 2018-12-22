@@ -112,6 +112,8 @@
     <Compile Include="Models\Azure\DataCreation\CreateAccessPolicyModel.cs" />
     <Compile Include="Models\Azure\DataCreation\CreateLocatorModel.cs" />
     <Compile Include="Models\Azure\DataCreation\CreateProgramModel.cs" />
+    <Compile Include="Models\Azure\MediaServices\AccessPolicyModel.cs" />
+    <Compile Include="Models\Azure\MediaServices\LocatorModel.cs" />
     <Compile Include="Models\Azure\Workflow\AssetStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\Workflow\LocatorStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\IAzureModel.cs" />
@@ -149,7 +151,7 @@
     <Compile Include="Services\Azure\MediaServices\MediaServicesConstants.cs" />
     <Compile Include="Services\Azure\MediaServices\ProgramService.cs" />
     <Compile Include="Services\Azure\MediaServices\StreamingEndpointService.cs" />
-    <Compile Include="Services\Azure\AggregationService.cs" />
+    <Compile Include="Services\Azure\Workflow.cs" />
     <Compile Include="Services\Firebase\FirebaseService.cs" />
     <Compile Include="Services\Network\RetryRestClient.cs" />
     <Compile Include="Utilities\HttpUtils.cs" />

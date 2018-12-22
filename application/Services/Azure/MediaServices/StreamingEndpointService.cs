@@ -1,10 +1,7 @@
 ﻿using LiteralLifeChurch.LiveStreamingController.Exceptions.Azure;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.MediaServices;
 using LiteralLifeChurch.LiveStreamingController.Repositories.Azure.MediaServices;
-using LiteralLifeChurch.LiveStreamingController.Services.Network;
-using LiteralLifeChurch.LiveStreamingController.Utilities;
 using Newtonsoft.Json.Linq;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +10,7 @@ using System.Reactive.Linq;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
-    internal class StreamingEndpointService : MediaService
+    internal class StreamingEndpointService : MediaService<StreamingEndpointModel>
     {
         public IObservable<IEnumerable<StreamingEndpointModel>> Endpoints =>
             Observable.Create<IEnumerable<StreamingEndpointModel>>(subscriber =>
@@ -46,38 +43,12 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                 return Disposable.Empty;
             });
 
-        public IObservable<bool> StartAll => Observable.Create<bool>(subscriber =>
-        {
-            bool successfullyStartedAll = true;
+        public new IObservable<bool> StartAll => StartAll(Endpoints, endpoint =>
+            string.Format(MediaServicesConstants.Paths.StreamingEndpoints.Start, endpoint.Id)
+        );
 
-            MediaServicesRepository.Endpoints.ForEach(endpoint =>
-            {
-                if (!successfullyStartedAll)
-                {
-                    return;
-                }
-
-                string path = $"StreamingEndpoints('{endpoint.Id}')/Start";
-
-                RetryRestClient client = GenerateClient(path);
-                RestRequest request = GenerateAuthenticatedRequest(Method.POST);
-                IRestResponse response = client.Execute(request);
-
-                if (!HttpUtils.Is2xx(response.StatusCode))
-                {
-                    successfullyStartedAll = false;
-                }
-            });
-
-            if (!successfullyStartedAll)
-            {
-                subscriber.OnError(new StartUpException("Could not start up one or more streaming endpoints"));
-                return Disposable.Empty;
-            }
-
-            subscriber.OnNext(true);
-            subscriber.OnCompleted();
-            return Disposable.Empty;
-        });
+        public new IObservable<bool> StopAll => StopAll(Endpoints, endpoint =>
+            string.Format(MediaServicesConstants.Paths.StreamingEndpoints.Stop, endpoint.Id)
+        );
     }
 }

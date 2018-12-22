@@ -1,4 +1,4 @@
-﻿using LiteralLifeChurch.LiveStreamingController.Services.Firebase;
+﻿using LiteralLifeChurch.LiveStreamingController.Enums.Azure;
 using LiteralLifeChurch.LiveStreamingController.ViewModels;
 using System;
 using System.Reactive.Concurrency;
@@ -16,6 +16,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 {
     public sealed partial class MainPage : Page
     {
+        private StatusType status = StatusType.NotReady;
         private MainPageViewModel viewModel = new MainPageViewModel();
 
         public MainPage()
@@ -32,26 +33,23 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void InitializeStatus()
         {
-            PrepareUiForLoading("StatusChecking", Colors.Black);
+            PrepareUiForLoading("StreamingWorking", "StatusChecking", Colors.Black);
 
             viewModel.Status
                 .SelectMany(status =>
                 {
-                    viewModel.CacheServices(status);
-                    return Observable.Return(status);
-                })
-                .SelectMany(status =>
-                {
+                    this.status = status.Summary;
                     return viewModel.MapToDisplayableStatus(status);
                 })
                 .SubscribeOn(NewThreadScheduler.Default)
                 .ObserveOnDispatcher()
                 .Subscribe(status =>
                 {
-                    DisplayOutcomeOnUi(status.StatusTextResource, status.StatusTextColor);
+                    DisplayOutcomeOnUi(status.ButtonTextResource, status.StatusTextResource, status.StatusTextColor);
                 }, error =>
                 {
-                    DisplayOutcomeOnUi("StatusNotReady", Colors.Red);
+                    DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
+                    status = StatusType.NotReady;
                 });
         }
 
@@ -63,35 +61,58 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void StreamButtonClick(object sender, RoutedEventArgs e)
         {
-            PrepareUiForLoading("StatusStarting", Colors.Goldenrod);
+            if (status == StatusType.NotReady)
+            {
+                PrepareUiForLoading("StreamingWorking", "StatusStarting", Colors.Goldenrod);
 
-            viewModel.StartStreaming
-                .SubscribeOn(NewThreadScheduler.Default)
-                .ObserveOnDispatcher()
-                .Subscribe(outcome =>
-                {
-                    DisplayOutcomeOnUi("StatusReady", Colors.Green);
-                }, error =>
-                {
-                    DisplayOutcomeOnUi("StatusNotReady", Colors.Red);
-                });
+                viewModel.StartStreaming
+                    .SubscribeOn(NewThreadScheduler.Default)
+                    .ObserveOnDispatcher()
+                    .Subscribe(outcome =>
+                    {
+                        DisplayOutcomeOnUi("StreamingStop", "StatusReady", Colors.Green);
+                        status = outcome.Summary;
+                    }, error =>
+                    {
+                        DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
+                        status = StatusType.NotReady;
+                    });
+            }
+            else if (status == StatusType.Ready)
+            {
+                PrepareUiForLoading("StreamingWorking", "StatusStopping", Colors.Goldenrod);
+
+                viewModel.StopStreaming
+                    .SubscribeOn(NewThreadScheduler.Default)
+                    .ObserveOnDispatcher()
+                    .Subscribe(outcome =>
+                    {
+                        DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
+                        status = StatusType.NotReady;
+                    }, error =>
+                    {
+                        status = StatusType.Ready;
+                    });
+            }
         }
 
-        private void DisplayOutcomeOnUi(string indicatorText, Color indicatorColor)
+        private void DisplayOutcomeOnUi(string buttonText, string indicatorText, Color indicatorColor)
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView();
 
             ProgressBar.Visibility = Visibility.Collapsed;
+            StreamingButton.Content = loader.GetString(buttonText);
             StreamingButton.IsEnabled = true;
             StatusIndicator.Foreground = new SolidColorBrush(indicatorColor);
             StatusIndicator.Text = loader.GetString(indicatorText);
         }
 
-        private void PrepareUiForLoading(string indicatorText, Color indicatorColor)
+        private void PrepareUiForLoading(string buttonText, string indicatorText, Color indicatorColor)
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView();
 
             ProgressBar.Visibility = Visibility.Visible;
+            StreamingButton.Content = loader.GetString(buttonText);
             StreamingButton.IsEnabled = false;
             StatusIndicator.Foreground = new SolidColorBrush(indicatorColor);
             StatusIndicator.Text = loader.GetString(indicatorText);

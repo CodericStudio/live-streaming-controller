@@ -3,7 +3,6 @@ using LiteralLifeChurch.LiveStreamingController.Exceptions.Azure;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.MediaServices;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.Status;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.Workflow;
-using LiteralLifeChurch.LiveStreamingController.Repositories.Azure.MediaServices;
 using LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Reactive.Linq;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
 {
-    internal class AggregationService
+    internal class Workflow
     {
         private readonly AccessPolicyService accessPolicyService = new AccessPolicyService();
         private readonly AssetService assetService = new AssetService();
@@ -69,10 +68,10 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                     endpointService.StartAll.SubscribeOn(NewThreadScheduler.Default)
                 };
 
-                return Observable.Zip(startUpServices, startedServicesOutcome => // [1]
+                return Observable.Zip(startUpServices, startedServicesPayload => // [1]
                 {
                     return true;
-                }).SelectMany(startedServicesOutcome => // [2]
+                }).SelectMany(startedServicesPayload => // [2]
                 {
                     return HammerPollUntil(
                         allChannels: StatusType.Ready,
@@ -81,7 +80,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                     );
                 }).SelectMany(serviceStatusesPayload => // [3]
                 {
-                    List<IObservable<AssetStepWorkflowModel>> createAssets = MediaServicesRepository.Channels.Select(channelPayload =>
+                    List<IObservable<AssetStepWorkflowModel>> createAssets = serviceStatusesPayload.Channels.Select(channelPayload =>
                     {
                         return assetService.Create(channelPayload.Id).SubscribeOn(NewThreadScheduler.Default);
                     }).ToList();
@@ -151,6 +150,11 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                         endpoints.Any(x => x.Status == StatusType.Starting) ||
                         programs.Any(x => x.Status == StatusType.Starting);
 
+                    bool anyStopping =
+                        channels.Any(x => x.Status == StatusType.Stopping) ||
+                        endpoints.Any(x => x.Status == StatusType.Stopping) ||
+                        programs.Any(x => x.Status == StatusType.Stopping);
+
                     bool anyNotReady =
                         channels.Any(x => x.Status == StatusType.NotReady) ||
                         endpoints.Any(x => x.Status == StatusType.NotReady) ||
@@ -161,6 +165,10 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                     if (anyStarting)
                     {
                         summary = StatusType.Starting;
+                    }
+                    else if (anyStopping)
+                    {
+                        summary = StatusType.Stopping;
                     }
                     else if (anyNotReady)
                     {
@@ -177,6 +185,45 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 });
             }
         }
+
+        public IObservable<ServiceStatusModel> Stop => programService
+            .StopAll
+            .SelectMany(stoppedProgramsPayload =>
+            {
+                return endpointService.StopAll;
+            }).SelectMany(stoppedEndpointsPayload =>
+            {
+                return HammerPollUntil(
+                    allChannels: null, // Don't care, stopping these later
+                    allEndpoints: StatusType.NotReady,
+                    allPrograms: StatusType.NotReady
+                );
+            }).SelectMany(serviceStatusesPayload =>
+            {
+                return channelService.StopAll;
+            }).SelectMany(stoppedChannelsPayload =>
+            {
+                return HammerPollUntil(
+                        allChannels: StatusType.NotReady,
+                        allEndpoints: null, // Already stopped
+                        allPrograms: null   // these earlier
+                    );
+            }).SelectMany(serviceStatusesPayload =>
+            {
+                return programService.DeleteAll;
+            }).SelectMany(deletedProgramsPayload =>
+            {
+                return locatorService.DeleteAll;
+            }).SelectMany(deletedLocatorsPayload =>
+            {
+                return accessPolicyService.DeleteAll;
+            }).SelectMany(deletedAccessPoliciesPayload =>
+            {
+                return assetService.DeleteAll;
+            }).SelectMany(deletedAssetsPayload =>
+            {
+                return Status;
+            });
 
         private IObservable<ServiceStatusModel> HammerPollUntil(StatusType? allChannels, StatusType? allEndpoints, StatusType? allPrograms)
         {

@@ -1,6 +1,5 @@
 ﻿using LiteralLifeChurch.LiveStreamingController.Enums.Azure;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.Status;
-using LiteralLifeChurch.LiveStreamingController.Repositories.Azure.MediaServices;
 using LiteralLifeChurch.LiveStreamingController.Services.Azure;
 using System;
 using System.Reactive.Linq;
@@ -10,13 +9,7 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
 {
     internal class MainPageViewModel : IViewModel
     {
-        private readonly AggregationService AggregationService = new AggregationService();
-
-        public void CacheServices(ServiceStatusModel status)
-        {
-            MediaServicesRepository.Channels = status.Channels;
-            MediaServicesRepository.Endpoints = status.Endpoints;
-        }
+        private readonly Workflow Workflow = new Workflow();
 
         public IObservable<ServiceStatusDesignUpdateModel> MapToDisplayableStatus(ServiceStatusModel status)
         {
@@ -27,6 +20,7 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
                 case StatusType.Ready:
                     displayableStatus = new ServiceStatusDesignUpdateModel()
                     {
+                        ButtonTextResource = "StreamingStop",
                         StatusTextColor = Colors.Green,
                         StatusTextResource = "StatusReady"
                     };
@@ -36,8 +30,19 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
                 case StatusType.Starting:
                     displayableStatus = new ServiceStatusDesignUpdateModel()
                     {
+                        ButtonTextResource = "StreamingWorking",
                         StatusTextColor = Colors.Goldenrod,
                         StatusTextResource = "StatusStarting"
+                    };
+
+                    break;
+
+                case StatusType.Stopping:
+                    displayableStatus = new ServiceStatusDesignUpdateModel()
+                    {
+                        ButtonTextResource = "StreamingWorking",
+                        StatusTextColor = Colors.Goldenrod,
+                        StatusTextResource = "StatusStopping"
                     };
 
                     break;
@@ -45,6 +50,7 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
                 default:
                     displayableStatus = new ServiceStatusDesignUpdateModel()
                     {
+                        ButtonTextResource = "StreamingStart",
                         StatusTextColor = Colors.Red,
                         StatusTextResource = "StatusNotReady"
                     };
@@ -56,9 +62,12 @@ namespace LiteralLifeChurch.LiveStreamingController.ViewModels
         }
 
         public IObservable<ServiceStatusModel> StartStreaming =>
-            AggregationService.Start;
+            Workflow.Start;
 
         public IObservable<ServiceStatusModel> Status =>
-            AggregationService.Status;
+            Workflow.Status;
+
+        public IObservable<ServiceStatusModel> StopStreaming =>
+            Workflow.Stop;
     }
 }

@@ -34,9 +34,7 @@
             Grid.Column="1" Grid.Row="1"
             Name="StatusIndicator" />
 
-        <!-- TODO: Replace content text -->
         <Button
-            Content="Start Streaming"
             FontSize="16px" Height="60px" HorizontalAlignment="Stretch" Margin="10"
             Style="{StaticResource ButtonRevealStyle}"
             Click="StreamButtonClick" Name="StreamingButton"

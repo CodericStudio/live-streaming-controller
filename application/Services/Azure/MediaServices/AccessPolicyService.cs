@@ -7,25 +7,28 @@ using LiteralLifeChurch.LiveStreamingController.Utilities;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text.RegularExpressions;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
-    internal class AccessPolicyService : MediaService
+    internal class AccessPolicyService : MediaService<AccessPolicyModel>
     {
         public IObservable<AccessPolicyStepWorkflowModel> Create(string assetId, ProgramModel program)
         {
             return Observable.Create<AccessPolicyStepWorkflowModel>(subscriber =>
             {
-                string path = MediaServicesConstants.Paths.AccessPolicy.Create;
+                string path = MediaServicesConstants.Paths.AccessPolicies.Create;
                 RetryRestClient client = GenerateClient(path);
 
                 CreateAccessPolicyModel payload = new CreateAccessPolicyModel
                 {
-                    DurationInMinutes = MediaServicesConstants.Conventions.AccessPolicy.DurationInMinutes.ToString(),
+                    DurationInMinutes = MediaServicesConstants.Conventions.AccessPolicies.DurationInMinutes.ToString(),
                     Name = GenerateAccessPolicyName(),
-                    Permissions = MediaServicesConstants.Conventions.AccessPolicy.Permissions
+                    Permissions = MediaServicesConstants.Conventions.AccessPolicies.Permissions
                 };
 
                 RestRequest request = GenerateAuthenticatedRequest(Method.POST);
@@ -61,10 +64,44 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
             });
         }
 
+        public new IObservable<bool> DeleteAll => DeleteAll(AccessPolicies, accessPolicy =>
+            string.Format(MediaServicesConstants.Paths.AccessPolicies.Delete, accessPolicy.Id)
+        );
+
+        private IObservable<IEnumerable<AccessPolicyModel>> AccessPolicies =>
+            Observable.Create<IEnumerable<AccessPolicyModel>>(subscriber =>
+            {
+                JObject json = GetServiceInfo(MediaServicesConstants.Paths.AccessPolicies.List);
+
+                if (json == null)
+                {
+                    subscriber.OnError(new ServiceStatusException("Response is invalid"));
+                    return Disposable.Empty;
+                }
+
+                IEnumerable<AccessPolicyModel> accessPolicies = json.SelectToken(MediaServicesConstants.Json.Value).Select(accessPolicy =>
+                {
+                    return new AccessPolicyModel
+                    {
+                        DurationInMinutes = accessPolicy.SelectToken(MediaServicesConstants.Json.DurationInMinutes).Value<int>(),
+                        Id = accessPolicy.SelectToken(MediaServicesConstants.Json.Id).Value<string>(),
+                        Name = accessPolicy.SelectToken(MediaServicesConstants.Json.Name).Value<string>(),
+                        Permissions = accessPolicy.SelectToken(MediaServicesConstants.Json.Permissions).Value<int>()
+                    };
+                }).Where(accessPolicy =>
+                {
+                    return Regex.IsMatch(accessPolicy.Name, MediaServicesConstants.Conventions.AccessPolicies.RegexSelector);
+                });
+
+                subscriber.OnNext(accessPolicies);
+                subscriber.OnCompleted();
+                return Disposable.Empty;
+            });
+
         private string GenerateAccessPolicyName()
         {
             string guid = Guid.NewGuid().ToString();
-            return $"{MediaServicesConstants.Conventions.AccessPolicy.NamePrefix}{guid}";
+            return $"{MediaServicesConstants.Conventions.AccessPolicies.NamePrefix}{guid}";
         }
     }
 }

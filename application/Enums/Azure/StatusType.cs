@@ -4,6 +4,7 @@
     {
         NotReady,
         Starting,
+        Stopping,
         Ready
     }
 }

@@ -17,7 +17,7 @@ using System.Text.RegularExpressions;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
-    internal class ProgramService : MediaService
+    internal class ProgramService : MediaService<ProgramModel>
     {
         public IObservable<ProgramStepWorkflowModel> Create(string channelId, string assetId)
         {
@@ -71,6 +71,10 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
             });
         }
 
+        public IObservable<bool> DeleteAll => DeleteAll(Programs, program =>
+            string.Format(MediaServicesConstants.Paths.Programs.Delete, program.Id)
+        );
+
         public IObservable<IEnumerable<ProgramModel>> Programs =>
             Observable.Create<IEnumerable<ProgramModel>>(subscriber =>
             {
@@ -104,40 +108,14 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 
         public IObservable<bool> StartAll(List<ProgramModel> programs)
         {
-            return Observable.Create<bool>(subscriber =>
-            {
-                bool successfullyStartedAll = true;
-
-                programs.ForEach(program =>
-                {
-                    if (!successfullyStartedAll)
-                    {
-                        return;
-                    }
-
-                    string path = string.Format(MediaServicesConstants.Paths.Programs.Start, program.Id);
-
-                    RetryRestClient client = GenerateClient(path);
-                    RestRequest request = GenerateAuthenticatedRequest(Method.POST);
-                    IRestResponse response = client.Execute(request);
-
-                    if (!HttpUtils.Is2xx(response.StatusCode))
-                    {
-                        successfullyStartedAll = false;
-                    }
-                });
-
-                if (!successfullyStartedAll)
-                {
-                    subscriber.OnError(new StartUpException("Could not start up one or more programs"));
-                    return Disposable.Empty;
-                }
-
-                subscriber.OnNext(true);
-                subscriber.OnCompleted();
-                return Disposable.Empty;
-            });
+            return StartAll(programs, program =>
+                string.Format(MediaServicesConstants.Paths.Programs.Start, program.Id)
+            );
         }
+
+        public new IObservable<bool> StopAll => StopAll(Programs, program =>
+            string.Format(MediaServicesConstants.Paths.Programs.Stop, program.Id)
+        );
 
         private string GenerateAssetName()
         {
