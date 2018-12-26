@@ -8,7 +8,6 @@ using LiteralLifeChurch.LiveStreamingController.Models.Firebase;
 using LiteralLifeChurch.LiveStreamingController.Models.Firebase.Workflow;
 using LiteralLifeChurch.LiveStreamingController.Repositories.Firebase;
 using System;
-using System.Linq;
 using System.Reactive.Linq;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services.Firebase
@@ -25,10 +24,10 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Firebase
             CollectionReference collection = database.Collection(FirebaseConstants.CollectionName);
             QuerySnapshot snapshot = await collection.GetSnapshotAsync();
 
-            snapshot.Documents.Select(async document =>
+            foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 await document.Reference.DeleteAsync();
-            });
+            }
 
             await channel.ShutdownAsync();
             return true;

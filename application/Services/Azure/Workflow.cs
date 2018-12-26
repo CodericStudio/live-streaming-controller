@@ -201,41 +201,34 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
         public IObservable<ServiceStatusModel> Stop => programService
             .StopAll
             .SelectMany(stoppedProgramsPayload =>
-            {
-                return endpointService.StopAll;
-            }).SelectMany(stoppedEndpointsPayload =>
-            {
-                return HammerPollUntil(
+                endpointService.StopAll
+            ).SelectMany(stoppedEndpointsPayload =>
+                 HammerPollUntil(
                     allChannels: null, // Don't care, stopping these later
                     allEndpoints: StatusType.NotReady,
                     allPrograms: StatusType.NotReady
-                );
-            }).SelectMany(serviceStatusesPayload =>
-            {
-                return channelService.StopAll;
-            }).SelectMany(stoppedChannelsPayload =>
-            {
-                return HammerPollUntil(
-                        allChannels: StatusType.NotReady,
-                        allEndpoints: null, // Already stopped
-                        allPrograms: null   // these earlier
-                    );
-            }).SelectMany(serviceStatusesPayload =>
-            {
-                return programService.DeleteAll;
-            }).SelectMany(deletedProgramsPayload =>
-            {
-                return locatorService.DeleteAll;
-            }).SelectMany(deletedLocatorsPayload =>
-            {
-                return accessPolicyService.DeleteAll;
-            }).SelectMany(deletedAccessPoliciesPayload =>
-            {
-                return assetService.DeleteAll;
-            }).SelectMany(deletedAssetsPayload =>
-            {
-                return Status;
-            });
+                )
+            ).SelectMany(serviceStatusesPayload =>
+                channelService.StopAll
+            ).SelectMany(stoppedChannelsPayload =>
+                HammerPollUntil(
+                    allChannels: StatusType.NotReady,
+                    allEndpoints: null, // Already stopped
+                    allPrograms: null   // these earlier
+                )
+            ).SelectMany(serviceStatusesPayload =>
+                programService.DeleteAll
+            ).SelectMany(deletedProgramsPayload =>
+                locatorService.DeleteAll
+            ).SelectMany(deletedLocatorsPayload =>
+                accessPolicyService.DeleteAll
+            ).SelectMany(deletedAccessPoliciesPayload =>
+                assetService.DeleteAll
+            ).SelectMany(deletedAssetsPayload =>
+                firebaseService.DeleteAll
+            ).SelectMany(deletedCollectionPayload =>
+                Status
+            );
 
         private IObservable<ServiceStatusModel> HammerPollUntil(StatusType? allChannels, StatusType? allEndpoints, StatusType? allPrograms)
         {
