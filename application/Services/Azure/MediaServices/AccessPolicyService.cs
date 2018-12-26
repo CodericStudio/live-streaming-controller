@@ -17,7 +17,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
     internal class AccessPolicyService : MediaService<AccessPolicyModel>
     {
-        public IObservable<AccessPolicyStepWorkflowModel> Create(string assetId, ProgramModel program)
+        public IObservable<AccessPolicyStepWorkflowModel> Create(string assetId, ChannelModel channel, ProgramModel program)
         {
             return Observable.Create<AccessPolicyStepWorkflowModel>(subscriber =>
             {
@@ -55,6 +55,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                 {
                     AccessPolicyId = json.SelectToken(MediaServicesConstants.Json.Id).Value<string>(),
                     AssetId = assetId,
+                    Channel = channel,
                     Program = program
                 });
 

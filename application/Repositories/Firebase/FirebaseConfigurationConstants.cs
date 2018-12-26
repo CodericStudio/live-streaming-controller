@@ -2,7 +2,7 @@
 {
     internal class FirebaseConfigurationConstants
     {
-        public const string AppSecret = "LIVE_STREAMING_CONTROLLER_FIREBASE_APP_SECRET";
-        public const string AppUrl = "LIVE_STREAMING_CONTROLLER_FIREBASE_APP_URL";
+        public const string CredentialString = "LIVE_STREAMING_CONTROLLER_FIREBASE_CREDENTIAL_STRING";
+        public const string ProjectId = "LIVE_STREAMING_CONTROLLER_FIREBASE_PROJECT_ID";
     }
 }

@@ -19,7 +19,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
     internal class ProgramService : MediaService<ProgramModel>
     {
-        public IObservable<ProgramStepWorkflowModel> Create(string channelId, string assetId)
+        public IObservable<ProgramStepWorkflowModel> Create(ChannelModel channel, string assetId)
         {
             return Observable.Create<ProgramStepWorkflowModel>(subscriber =>
             {
@@ -30,7 +30,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                 {
                     ArchiveWindowLength = MediaServicesConfigurationRepository.ProgramArchiveWindowDuration,
                     AssetId = assetId,
-                    ChannelId = channelId,
+                    ChannelId = channel.Id,
                     Description = string.Empty,
                     Name = GenerateAssetName()
                 };
@@ -58,6 +58,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                 subscriber.OnNext(new ProgramStepWorkflowModel()
                 {
                     AssetId = assetId,
+                    Channel = channel,
                     Program = new ProgramModel()
                     {
                         Id = json.SelectToken(MediaServicesConstants.Json.Id).Value<string>(),

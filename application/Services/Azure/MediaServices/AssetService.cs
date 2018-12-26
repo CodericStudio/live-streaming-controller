@@ -17,7 +17,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
     internal class AssetService : MediaService<AssetModel>
     {
-        public IObservable<AssetStepWorkflowModel> Create(string channelId)
+        public IObservable<AssetStepWorkflowModel> Create(ChannelModel channel)
         {
             return Observable.Create<AssetStepWorkflowModel>(subscriber =>
             {
@@ -52,7 +52,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                 subscriber.OnNext(new AssetStepWorkflowModel()
                 {
                     AssetId = json.SelectToken(MediaServicesConstants.Json.Id).Value<string>(),
-                    ChannelId = channelId
+                    Channel = channel
                 });
 
                 subscriber.OnCompleted();

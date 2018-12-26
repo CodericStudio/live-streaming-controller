@@ -128,8 +128,12 @@
     <Compile Include="Models\Azure\Status\ServiceStatusDesignUpdateModel.cs" />
     <Compile Include="Models\Azure\Status\ServiceStatusModel.cs" />
     <Compile Include="Models\Azure\Workflow\AccessPolicyStepWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\IWorkflowModel.cs" />
+    <Compile Include="Models\Azure\Workflow\IAzureWorkflowModel.cs" />
     <Compile Include="Models\Azure\Workflow\ProgramStepWorkflowModel.cs" />
+    <Compile Include="Models\Firebase\IFirebaseModel.cs" />
+    <Compile Include="Models\Firebase\MediaModel.cs" />
+    <Compile Include="Models\Firebase\Workflow\FirebaseStepWorkflowModel.cs" />
+    <Compile Include="Models\Firebase\Workflow\IFirebaseWorkflowModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Azure\Authentication\AuthenticationConfigurationConstants.cs" />
@@ -152,6 +156,7 @@
     <Compile Include="Services\Azure\MediaServices\ProgramService.cs" />
     <Compile Include="Services\Azure\MediaServices\StreamingEndpointService.cs" />
     <Compile Include="Services\Azure\Workflow.cs" />
+    <Compile Include="Services\Firebase\FirebaseConstants.cs" />
     <Compile Include="Services\Firebase\FirebaseService.cs" />
     <Compile Include="Services\Network\RetryRestClient.cs" />
     <Compile Include="Utilities\HttpUtils.cs" />
@@ -186,14 +191,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FirebaseDatabase.net">
-      <Version>3.3.3</Version>
+    <PackageReference Include="Google.Cloud.Firestore">
+      <Version>1.0.0-beta15</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>11.0.2</Version>
+      <Version>12.0.1</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>106.5.4</Version>

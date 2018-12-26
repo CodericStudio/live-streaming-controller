@@ -3,7 +3,9 @@ using LiteralLifeChurch.LiveStreamingController.Exceptions.Azure;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.MediaServices;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.Status;
 using LiteralLifeChurch.LiveStreamingController.Models.Azure.Workflow;
+using LiteralLifeChurch.LiveStreamingController.Models.Firebase.Workflow;
 using LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices;
+using LiteralLifeChurch.LiveStreamingController.Services.Firebase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
         private readonly AssetService assetService = new AssetService();
         private readonly ChannelService channelService = new ChannelService();
         private readonly StreamingEndpointService endpointService = new StreamingEndpointService();
+        private readonly FirebaseService firebaseService = new FirebaseService();
         private readonly LocatorService locatorService = new LocatorService();
         private readonly ProgramService programService = new ProgramService();
 
@@ -36,27 +39,28 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
          *     Emit: Nothing special
          *     
          * [2] Wait for all endpoints and channels to start from [1]
-         *     Emit: Service status model
+         *     Emit: Service Status model
          *     
          * [3] Create one asset for each program for [4]
-         *     Emit: Asset ID and channel ID
+         *     Emit: Asset ID and Channel model
          * 
          * [4] Create one program under each channel from [1] and associate it with created asset from [3]
-         *     Emit: Asset ID and Program model
+         *     Emit: Asset ID, Channel model, and Program model
          * 
          * [5] Create a read-only access policy for [6]
-         *     Emit: Access policy ID, Asset ID, and Program model
+         *     Emit: Access policy ID, Asset ID, Channel model, and Program model
          * 
          * [6] Create a locator and associate it with policy from [5] and asset from [3]
-         *     Emit: Locator path and Program model
+         *     Emit: Locator path, Channel model, and Program model
+         *     
+         * [7] Send the locator URL created in [6] for each program created in [4] to Firebase
+         *     Emit: Program model
          * 
-         * [7] Start all programs created in [4]
+         * [8] Start all programs created in [4]
          *     Emit: Boolean indicating whether the programs stated
          * 
-         * [8] Wait for all programs from [4] to start
+         * [9] Wait for all programs from [4] to start
          *     Emit: Service Status model
-         * 
-         * [9] Send program IDs to Firebase
          */
 
         public IObservable<ServiceStatusModel> Start {
@@ -82,7 +86,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 {
                     List<IObservable<AssetStepWorkflowModel>> createAssets = serviceStatusesPayload.Channels.Select(channelPayload =>
                     {
-                        return assetService.Create(channelPayload.Id).SubscribeOn(NewThreadScheduler.Default);
+                        return assetService.Create(channelPayload).SubscribeOn(NewThreadScheduler.Default);
                     }).ToList();
 
                     return Observable.Zip(createAssets);
@@ -90,7 +94,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 {
                     List<IObservable<ProgramStepWorkflowModel>> createPrograms = createdAssetsPayload.Select(assetPayload =>
                     {
-                        return programService.Create(assetPayload.ChannelId, assetPayload.AssetId).SubscribeOn(NewThreadScheduler.Default);
+                        return programService.Create(assetPayload.Channel, assetPayload.AssetId).SubscribeOn(NewThreadScheduler.Default);
                     }).ToList();
 
                     return Observable.Zip(createPrograms);
@@ -98,7 +102,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 {
                     List<IObservable<AccessPolicyStepWorkflowModel>> createAccessPolicies = createdProgramsPayload.Select(programPayload =>
                     {
-                        return accessPolicyService.Create(programPayload.AssetId, programPayload.Program).SubscribeOn(NewThreadScheduler.Default);
+                        return accessPolicyService.Create(programPayload.AssetId, programPayload.Channel, programPayload.Program).SubscribeOn(NewThreadScheduler.Default);
                     }).ToList();
 
                     return Observable.Zip(createAccessPolicies);
@@ -106,11 +110,19 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 {
                     List<IObservable<LocatorStepWorkflowModel>> createLocators = createdAccessPoliciesPayload.Select(accessPolicyPayload =>
                     {
-                        return locatorService.Create(accessPolicyPayload.AssetId, accessPolicyPayload.AccessPolicyId, accessPolicyPayload.Program).SubscribeOn(NewThreadScheduler.Default);
+                        return locatorService.Create(accessPolicyPayload.AssetId, accessPolicyPayload.AccessPolicyId, accessPolicyPayload.Channel, accessPolicyPayload.Program).SubscribeOn(NewThreadScheduler.Default);
                     }).ToList();
 
                     return Observable.Zip(createLocators);
                 }).SelectMany(createdLocatorsPayload => // [7]
+                {
+                    List<IObservable<FirebaseStepWorkflowModel>> firebaseUpdates = createdLocatorsPayload.Select(locatorPayload =>
+                    {
+                        return firebaseService.PublishUrl(locatorPayload.Channel.Name, locatorPayload.Path, locatorPayload.Program);
+                    }).ToList();
+
+                    return Observable.Zip(firebaseUpdates);
+                }).SelectMany(createdLocatorsPayload => // [8]
                 {
                     List<ProgramModel> programsToStart = createdLocatorsPayload.Select(locatorPayload =>
                     {
@@ -118,7 +130,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                     }).ToList();
 
                     return programService.StartAll(programsToStart);
-                }).SelectMany(startedProgramsPayload => // [8]
+                }).SelectMany(startedProgramsPayload => // [9]
                 {
                     return HammerPollUntil(
                         allChannels: null,  // Already started

@@ -24,6 +24,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
             {
                 public const string NamePrefix = "LiteralLifeChurch-LiveStreamingController-Locator-";
                 public const string RegexSelector = @"LiteralLifeChurch\-LiveStreamingController\-Locator\-[a-fA-F0-9\-]{36}";
+                public const string ManifestPath = "{0}.ism/manifest";
                 public const int Type = 2; // On-Demand Origin
             }
 
