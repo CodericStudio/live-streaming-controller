@@ -17,6 +17,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
     internal class Workflow
     {
         private readonly AccessPolicyService accessPolicyService = new AccessPolicyService();
+        private readonly AssetFileService assetFileService = new AssetFileService();
         private readonly AssetService assetService = new AssetService();
         private readonly ChannelService channelService = new ChannelService();
         private readonly StreamingEndpointService endpointService = new StreamingEndpointService();
@@ -46,21 +47,24 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
          * 
          * [4] Create one program under each channel from [1] and associate it with created asset from [3]
          *     Emit: Asset ID, Channel model, and Program model
-         * 
-         * [5] Create a read-only access policy for [6]
-         *     Emit: Access policy ID, Asset ID, Channel model, and Program model
-         * 
-         * [6] Create a locator and associate it with policy from [5] and asset from [3]
-         *     Emit: Locator path, Channel model, and Program model
          *     
-         * [7] Send the locator URL created in [6] for each program created in [4] to Firebase
+         * [5] Obtain the name of the .ism file created for the program in [4] inside of the asset created in [3]
+         *     Emit: Asset ID, Asset File model, Channel model, and program model
+         * 
+         * [6] Create a read-only access policy for [6]
+         *     Emit: Access policy ID, Asset ID, Asset File model, Channel model, and Program model
+         * 
+         * [7] Create a locator and associate it with policy from [5] and asset from [3]
+         *     Emit: Asset File model, Locator path, Channel model, and Program model
+         *     
+         * [8] Send the locator URL created in [6] for each program created in [4] to Firebase
          *     Emit: Program model
          * 
-         * [8] Start all programs created in [4]
+         * [9] Start all programs created in [4]
          *     Emit: Boolean indicating whether the programs stated
          * 
-         * [9] Wait for all programs from [4] to start
-         *     Emit: Service Status model
+         * [10] Wait for all programs from [4] to start
+         *      Emit: Service Status model
          */
 
         public IObservable<ServiceStatusModel> Start {
@@ -84,45 +88,53 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                     );
                 }).SelectMany(serviceStatusesPayload => // [3]
                 {
-                    List<IObservable<AssetStepWorkflowModel>> createAssets = serviceStatusesPayload.Channels.Select(channelPayload =>
+                    IEnumerable<IObservable<AssetStepWorkflowModel>> createAssets = serviceStatusesPayload.Channels.Select(channelPayload =>
                     {
                         return assetService.Create(channelPayload).SubscribeOn(NewThreadScheduler.Default);
-                    }).ToList();
+                    });
 
                     return Observable.Zip(createAssets);
                 }).SelectMany(createdAssetsPayload => // [4]
                 {
-                    List<IObservable<ProgramStepWorkflowModel>> createPrograms = createdAssetsPayload.Select(assetPayload =>
+                    IEnumerable<IObservable<ProgramStepWorkflowModel>> createPrograms = createdAssetsPayload.Select(assetPayload =>
                     {
                         return programService.Create(assetPayload.Channel, assetPayload.AssetId).SubscribeOn(NewThreadScheduler.Default);
-                    }).ToList();
+                    });
 
                     return Observable.Zip(createPrograms);
                 }).SelectMany(createdProgramsPayload => // [5]
                 {
-                    List<IObservable<AccessPolicyStepWorkflowModel>> createAccessPolicies = createdProgramsPayload.Select(programPayload =>
+                    IEnumerable<IObservable<AssetFileStepWorkflowModel>> obtainAssetFiles = createdProgramsPayload.Select(programPayload =>
                     {
-                        return accessPolicyService.Create(programPayload.AssetId, programPayload.Channel, programPayload.Program).SubscribeOn(NewThreadScheduler.Default);
-                    }).ToList();
+                        return assetFileService.GetIsmFile(programPayload.AssetId, programPayload.Channel, programPayload.Program).SubscribeOn(NewThreadScheduler.Default);
+                    });
+
+                    return Observable.Zip(obtainAssetFiles);
+                }).SelectMany(assetFilesPayload => // [6]
+                {
+                    IEnumerable<IObservable<AccessPolicyStepWorkflowModel>> createAccessPolicies = assetFilesPayload.Select(assetFilePayload =>
+                    {
+                        return accessPolicyService.Create(assetFilePayload.AssetId, assetFilePayload.AssetFile, assetFilePayload.Channel, assetFilePayload.Program).SubscribeOn(NewThreadScheduler.Default);
+                    });
 
                     return Observable.Zip(createAccessPolicies);
-                }).SelectMany(createdAccessPoliciesPayload => // [6]
+                }).SelectMany(createdAccessPoliciesPayload => // [7]
                 {
-                    List<IObservable<LocatorStepWorkflowModel>> createLocators = createdAccessPoliciesPayload.Select(accessPolicyPayload =>
+                    IEnumerable<IObservable<LocatorStepWorkflowModel>> createLocators = createdAccessPoliciesPayload.Select(accessPolicyPayload =>
                     {
-                        return locatorService.Create(accessPolicyPayload.AssetId, accessPolicyPayload.AccessPolicyId, accessPolicyPayload.Channel, accessPolicyPayload.Program).SubscribeOn(NewThreadScheduler.Default);
-                    }).ToList();
+                        return locatorService.Create(accessPolicyPayload.AssetId, accessPolicyPayload.AccessPolicyId, accessPolicyPayload.AssetFile, accessPolicyPayload.Channel, accessPolicyPayload.Program).SubscribeOn(NewThreadScheduler.Default);
+                    });
 
                     return Observable.Zip(createLocators);
-                }).SelectMany(createdLocatorsPayload => // [7]
+                }).SelectMany(createdLocatorsPayload => // [8]
                 {
-                    List<IObservable<FirebaseStepWorkflowModel>> firebaseUpdates = createdLocatorsPayload.Select(locatorPayload =>
+                    IEnumerable<IObservable<FirebaseStepWorkflowModel>> firebaseUpdates = createdLocatorsPayload.Select(locatorPayload =>
                     {
-                        return firebaseService.PublishUrl(locatorPayload.Channel.Name, locatorPayload.Path, locatorPayload.Program);
-                    }).ToList();
+                        return firebaseService.PublishUrl(locatorPayload.Channel.Name, locatorPayload.Path, locatorPayload.AssetFile.Name, locatorPayload.Program);
+                    });
 
                     return Observable.Zip(firebaseUpdates);
-                }).SelectMany(createdLocatorsPayload => // [8]
+                }).SelectMany(createdLocatorsPayload => // [9]
                 {
                     List<ProgramModel> programsToStart = createdLocatorsPayload.Select(locatorPayload =>
                     {
@@ -130,7 +142,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                     }).ToList();
 
                     return programService.StartAll(programsToStart);
-                }).SelectMany(startedProgramsPayload => // [9]
+                }).SelectMany(startedProgramsPayload => // [10]
                 {
                     return HammerPollUntil(
                         allChannels: null,  // Already started
@@ -200,35 +212,28 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
 
         public IObservable<ServiceStatusModel> Stop => programService
             .StopAll
-            .SelectMany(stoppedProgramsPayload =>
-                endpointService.StopAll
-            ).SelectMany(stoppedEndpointsPayload =>
+            .SelectMany(stoppedProgramsPayload => endpointService.StopAll)
+            .SelectMany(stoppedEndpointsPayload =>
                  HammerPollUntil(
                     allChannels: null, // Don't care, stopping these later
                     allEndpoints: StatusType.NotReady,
                     allPrograms: StatusType.NotReady
                 )
-            ).SelectMany(serviceStatusesPayload =>
-                channelService.StopAll
-            ).SelectMany(stoppedChannelsPayload =>
+            )
+            .SelectMany(serviceStatusesPayload => channelService.StopAll)
+            .SelectMany(stoppedChannelsPayload =>
                 HammerPollUntil(
                     allChannels: StatusType.NotReady,
                     allEndpoints: null, // Already stopped
                     allPrograms: null   // these earlier
                 )
-            ).SelectMany(serviceStatusesPayload =>
-                programService.DeleteAll
-            ).SelectMany(deletedProgramsPayload =>
-                locatorService.DeleteAll
-            ).SelectMany(deletedLocatorsPayload =>
-                accessPolicyService.DeleteAll
-            ).SelectMany(deletedAccessPoliciesPayload =>
-                assetService.DeleteAll
-            ).SelectMany(deletedAssetsPayload =>
-                firebaseService.DeleteAll
-            ).SelectMany(deletedCollectionPayload =>
-                Status
-            );
+            )
+            .SelectMany(serviceStatusesPayload => programService.DeleteAll)
+            .SelectMany(deletedProgramsPayload => locatorService.DeleteAll)
+            .SelectMany(deletedLocatorsPayload => accessPolicyService.DeleteAll)
+            .SelectMany(deletedAccessPoliciesPayload => assetService.DeleteAll)
+            .SelectMany(deletedAssetsPayload => firebaseService.DeleteAll)
+            .SelectMany(deletedCollectionPayload => Status);
 
         private IObservable<ServiceStatusModel> HammerPollUntil(StatusType? allChannels, StatusType? allEndpoints, StatusType? allPrograms)
         {

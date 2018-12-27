@@ -14,6 +14,11 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 public const string RegexSelector = @"LiteralLifeChurch\-LiveStreamingController\-AccessPolicy\-[a-fA-F0-9\-]{36}";
             }
 
+            internal class AssetFiles
+            {
+                public const string RegexSelector = @"\.ism$";
+            }
+
             internal class Assets
             {
                 public const string NamePrefix = "LiteralLifeChurch-LiveStreamingController-Asset-";
@@ -24,7 +29,6 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
             {
                 public const string NamePrefix = "LiteralLifeChurch-LiveStreamingController-Locator-";
                 public const string RegexSelector = @"LiteralLifeChurch\-LiveStreamingController\-Locator\-[a-fA-F0-9\-]{36}";
-                public const string ManifestPath = "{0}.ism/manifest";
                 public const int Type = 2; // On-Demand Origin
             }
 
@@ -63,6 +67,12 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
                 public const string Create = "AccessPolicies";
                 public const string Delete = "AccessPolicies('{0}')";
                 public const string List = "AccessPolicies";
+            }
+
+            internal class AssetFiles
+            {
+                public const string List = "Assets('{0}')/Files";
+                public const string ManifestPath = "{0}{1}/manifest";
             }
 
             internal class Assets

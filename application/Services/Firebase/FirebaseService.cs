@@ -7,6 +7,7 @@ using LiteralLifeChurch.LiveStreamingController.Models.Azure.MediaServices;
 using LiteralLifeChurch.LiveStreamingController.Models.Firebase;
 using LiteralLifeChurch.LiveStreamingController.Models.Firebase.Workflow;
 using LiteralLifeChurch.LiveStreamingController.Repositories.Firebase;
+using LiteralLifeChurch.LiveStreamingController.Services.Azure;
 using System;
 using System.Reactive.Linq;
 
@@ -33,7 +34,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Firebase
             return true;
         });
 
-        public IObservable<FirebaseStepWorkflowModel> PublishUrl(string channelName, string url, ProgramModel program)
+        public IObservable<FirebaseStepWorkflowModel> PublishUrl(string channelName, string locatorUrl, string ismFileName, ProgramModel program)
         {
             return Observable.FromAsync(async () =>
             {
@@ -43,6 +44,8 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Firebase
                 FirestoreDb database = FirestoreDb.Create(FirebaseConfigurationRepository.ProjectId, null, client);
 
                 CollectionReference collection = database.Collection(FirebaseConstants.CollectionName);
+
+                var url = string.Format(MediaServicesConstants.Paths.AssetFiles.ManifestPath, locatorUrl, ismFileName);
 
                 await collection.AddAsync(new MediaModel()
                 {

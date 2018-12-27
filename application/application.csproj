@@ -113,7 +113,9 @@
     <Compile Include="Models\Azure\DataCreation\CreateLocatorModel.cs" />
     <Compile Include="Models\Azure\DataCreation\CreateProgramModel.cs" />
     <Compile Include="Models\Azure\MediaServices\AccessPolicyModel.cs" />
+    <Compile Include="Models\Azure\MediaServices\AssetFileModel.cs" />
     <Compile Include="Models\Azure\MediaServices\LocatorModel.cs" />
+    <Compile Include="Models\Azure\Workflow\AssetFileStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\Workflow\AssetStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\Workflow\LocatorStepWorkflowModel.cs" />
     <Compile Include="Models\Azure\IAzureModel.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Services\Azure\Authentication\AzureAuthenticationConstants.cs" />
     <Compile Include="Services\Azure\Authentication\AzureAuthenticationService.cs" />
+    <Compile Include="Services\Azure\MediaServices\AssetFileService.cs" />
     <Compile Include="Services\Azure\MediaServices\AssetService.cs" />
     <Compile Include="Services\Azure\MediaServices\ChannelService.cs" />
     <Compile Include="Services\Azure\MediaServices\AccessPolicyService.cs" />

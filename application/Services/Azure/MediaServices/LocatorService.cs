@@ -17,7 +17,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
 {
     internal class LocatorService : MediaService<LocatorModel>
     {
-        public IObservable<LocatorStepWorkflowModel> Create(string assetId, string accessPolicyId, ChannelModel channel, ProgramModel program)
+        public IObservable<LocatorStepWorkflowModel> Create(string assetId, string accessPolicyId, AssetFileModel assetFile, ChannelModel channel, ProgramModel program)
         {
             return Observable.Create<LocatorStepWorkflowModel>(subscriber =>
             {
@@ -52,12 +52,11 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                     return null;
                 }
 
-                string locatorPath = json.SelectToken(MediaServicesConstants.Json.Path).Value<string>().TrimEnd('/');
-
                 subscriber.OnNext(new LocatorStepWorkflowModel()
                 {
+                    AssetFile = assetFile,
                     Channel = channel,
-                    Path = string.Format(MediaServicesConstants.Conventions.Locators.ManifestPath, locatorPath),
+                    Path = json.SelectToken(MediaServicesConstants.Json.Path).Value<string>(),
                     Program = program
                 });
 
@@ -94,7 +93,10 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure.MediaServices
                     };
                 }).Where(locator =>
                 {
-                    if (string.IsNullOrEmpty(locator.Name)) return false;
+                    if (string.IsNullOrEmpty(locator.Name))
+                    {
+                        return false;
+                    }
 
                     return Regex.IsMatch(locator.Name, MediaServicesConstants.Conventions.Locators.RegexSelector);
                 });

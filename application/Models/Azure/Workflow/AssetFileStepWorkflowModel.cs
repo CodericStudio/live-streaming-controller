@@ -2,11 +2,11 @@
 
 namespace LiteralLifeChurch.LiveStreamingController.Models.Azure.Workflow
 {
-    internal class LocatorStepWorkflowModel : IAzureWorkflowModel
+    internal class AssetFileStepWorkflowModel : IAzureWorkflowModel
     {
         public AssetFileModel AssetFile { get; set; }
+        public string AssetId { get; set; }
         public ChannelModel Channel { get; set; }
-        public string Path { get; set; }
         public ProgramModel Program { get; set; }
     }
 }
