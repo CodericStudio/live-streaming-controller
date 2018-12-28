@@ -10,6 +10,7 @@ using LiteralLifeChurch.LiveStreamingController.Repositories.Firebase;
 using LiteralLifeChurch.LiveStreamingController.Services.Azure;
 using System;
 using System.Reactive.Linq;
+using System.Text.RegularExpressions;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services.Firebase
 {
@@ -45,12 +46,14 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Firebase
 
                 CollectionReference collection = database.Collection(FirebaseConstants.CollectionName);
 
-                var url = string.Format(MediaServicesConstants.Paths.AssetFiles.ManifestPath, locatorUrl, ismFileName);
+                string url = string.Format(MediaServicesConstants.Paths.AssetFiles.ManifestPath, locatorUrl, ismFileName);
+                Regex regex = new Regex(MediaServicesConstants.Conventions.Locators.RegexProtocol);
+                string httpsUrl = regex.Replace(url, MediaServicesConstants.Conventions.Locators.ProtocolReplacement);
 
                 await collection.AddAsync(new MediaModel()
                 {
                     Name = channelName,
-                    Url = url
+                    Url = httpsUrl
                 });
 
                 await channel.ShutdownAsync();

@@ -28,6 +28,8 @@ namespace LiteralLifeChurch.LiveStreamingController.Services.Azure
             internal class Locators
             {
                 public const string NamePrefix = "LiteralLifeChurch-LiveStreamingController-Locator-";
+                public const string ProtocolReplacement = "https://";
+                public const string RegexProtocol = @"^(https:\/\/|http:\/\/|\/\/)";
                 public const string RegexSelector = @"LiteralLifeChurch\-LiveStreamingController\-Locator\-[a-fA-F0-9\-]{36}";
                 public const int Type = 2; // On-Demand Origin
             }
