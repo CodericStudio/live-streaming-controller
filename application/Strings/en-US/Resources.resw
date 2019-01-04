@@ -131,10 +131,10 @@
     <comment>Indicates the status of the services (Not Ready, Starting, Stopping, Ready), used like "Status: Ready"</comment>
   </data>
   <data name="StatusNotReady" xml:space="preserve">
-    <value>Not Ready</value>
+    <value>Not Ready to Stream</value>
   </data>
   <data name="StatusReady" xml:space="preserve">
-    <value>Ready</value>
+    <value>Ready to Stream</value>
   </data>
   <data name="StatusStarting" xml:space="preserve">
     <value>Starting</value>
@@ -143,12 +143,12 @@
     <value>Stopping</value>
   </data>
   <data name="StreamingStart" xml:space="preserve">
-    <value>Start Streaming</value>
+    <value>Turn on Streaming Provider Services</value>
   </data>
   <data name="StreamingStop" xml:space="preserve">
-    <value>Stop Streaming</value>
+    <value>Turn off Streaming Provider Services</value>
   </data>
   <data name="StreamingWorking" xml:space="preserve">
-    <value>Working...</value>
+    <value>Working, do not Close the Window</value>
   </data>
 </root>
