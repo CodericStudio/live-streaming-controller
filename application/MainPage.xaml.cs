@@ -55,44 +55,29 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void InitializeWindowSize()
         {
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(300, 150));
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(400, 200));
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+        }
+
+        private void RefreshStatusButtonClick(object sender, RoutedEventArgs e)
+        {
+            InitializeStatus();
+        }
+
+        private void StopAllButtonClick(object sender, RoutedEventArgs e)
+        {
+            StopAll();
         }
 
         private void StreamButtonClick(object sender, RoutedEventArgs e)
         {
             if (status == StatusType.NotReady)
             {
-                PrepareUiForLoading("StreamingWorking", "StatusStarting", Colors.Goldenrod);
-
-                viewModel.StartStreaming
-                    .SubscribeOn(NewThreadScheduler.Default)
-                    .ObserveOnDispatcher()
-                    .Subscribe(outcome =>
-                    {
-                        DisplayOutcomeOnUi("StreamingStop", "StatusReady", Colors.Green);
-                        status = outcome.Summary;
-                    }, error =>
-                    {
-                        DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
-                        status = StatusType.NotReady;
-                    });
+                StartAll();
             }
             else if (status == StatusType.Ready)
             {
-                PrepareUiForLoading("StreamingWorking", "StatusStopping", Colors.Goldenrod);
-
-                viewModel.StopStreaming
-                    .SubscribeOn(NewThreadScheduler.Default)
-                    .ObserveOnDispatcher()
-                    .Subscribe(outcome =>
-                    {
-                        DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
-                        status = StatusType.NotReady;
-                    }, error =>
-                    {
-                        status = StatusType.Ready;
-                    });
+                StopAll();
             }
         }
 
@@ -101,6 +86,8 @@ namespace LiteralLifeChurch.LiveStreamingController
             ResourceLoader loader = ResourceLoader.GetForCurrentView();
 
             ProgressBar.Visibility = Visibility.Collapsed;
+            RefreshButton.IsEnabled = true;
+            StopAllButton.IsEnabled = true;
             StreamingButton.Content = loader.GetString(buttonText);
             StreamingButton.IsEnabled = true;
             StatusIndicator.Foreground = new SolidColorBrush(indicatorColor);
@@ -112,10 +99,47 @@ namespace LiteralLifeChurch.LiveStreamingController
             ResourceLoader loader = ResourceLoader.GetForCurrentView();
 
             ProgressBar.Visibility = Visibility.Visible;
+            RefreshButton.IsEnabled = false;
+            StopAllButton.IsEnabled = false;
             StreamingButton.Content = loader.GetString(buttonText);
             StreamingButton.IsEnabled = false;
             StatusIndicator.Foreground = new SolidColorBrush(indicatorColor);
             StatusIndicator.Text = loader.GetString(indicatorText);
+        }
+
+        private void StartAll()
+        {
+            PrepareUiForLoading("StreamingWorking", "StatusStarting", Colors.Goldenrod);
+
+            viewModel.StartStreaming
+                .SubscribeOn(NewThreadScheduler.Default)
+                .ObserveOnDispatcher()
+                .Subscribe(outcome =>
+                {
+                    DisplayOutcomeOnUi("StreamingStop", "StatusReady", Colors.Green);
+                    status = outcome.Summary;
+                }, error =>
+                {
+                    DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
+                    status = StatusType.NotReady;
+                });
+        }
+
+        private void StopAll()
+        {
+            PrepareUiForLoading("StreamingWorking", "StatusStopping", Colors.Goldenrod);
+
+            viewModel.StopStreaming
+                .SubscribeOn(NewThreadScheduler.Default)
+                .ObserveOnDispatcher()
+                .Subscribe(outcome =>
+                {
+                    DisplayOutcomeOnUi("StreamingStart", "StatusNotReady", Colors.Red);
+                    status = StatusType.NotReady;
+                }, error =>
+                {
+                    status = StatusType.Ready;
+                });
         }
     }
 }

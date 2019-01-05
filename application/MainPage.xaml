@@ -7,6 +7,22 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.TopAppBar>
+        <CommandBar DefaultLabelPosition="Right">
+            <AppBarButton
+                Icon="Refresh"
+                Click="RefreshStatusButtonClick" Name="RefreshButton"
+                x:Uid="RefreshButton" />
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    Icon="Delete"
+                    Click="StopAllButtonClick" Name="StopAllButton"
+                    x:Uid="StopAllButton" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.TopAppBar>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60" />

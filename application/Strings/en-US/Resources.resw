@@ -123,6 +123,9 @@
   <data name="ApplicationName" xml:space="preserve">
     <value>Live Streaming Controller</value>
   </data>
+  <data name="RefreshButton.Label" xml:space="preserve">
+    <value>Status</value>
+  </data>
   <data name="StatusChecking" xml:space="preserve">
     <value>Checking...</value>
   </data>
@@ -141,6 +144,9 @@
   </data>
   <data name="StatusStopping" xml:space="preserve">
     <value>Stopping</value>
+  </data>
+  <data name="StopAllButton.Label" xml:space="preserve">
+    <value>Stop &amp; Reset All</value>
   </data>
   <data name="StreamingStart" xml:space="preserve">
     <value>Turn on Streaming Provider Services</value>
