@@ -1,48 +1,51 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2043
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "application", "application\application.csproj", "{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "application", "application\application.csproj", "{E9090420-0DCB-4FF5-9E62-86194836933D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|ARM.ActiveCfg = Debug|ARM
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|ARM.Build.0 = Debug|ARM
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|ARM.Deploy.0 = Debug|ARM
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|x64.ActiveCfg = Debug|x64
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|x64.Build.0 = Debug|x64
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|x64.Deploy.0 = Debug|x64
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|x86.ActiveCfg = Debug|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|x86.Build.0 = Debug|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Debug|x86.Deploy.0 = Debug|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|Any CPU.ActiveCfg = Release|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|ARM.ActiveCfg = Release|ARM
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|ARM.Build.0 = Release|ARM
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|ARM.Deploy.0 = Release|ARM
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|x64.ActiveCfg = Release|x64
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|x64.Build.0 = Release|x64
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|x64.Deploy.0 = Release|x64
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|x86.ActiveCfg = Release|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|x86.Build.0 = Release|x86
-		{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}.Release|x86.Deploy.0 = Release|x86
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|ARM.Build.0 = Debug|ARM
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|ARM64.Build.0 = Debug|ARM64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|x64.ActiveCfg = Debug|x64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|x64.Build.0 = Debug|x64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|x64.Deploy.0 = Debug|x64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|x86.ActiveCfg = Debug|x86
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|x86.Build.0 = Debug|x86
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Debug|x86.Deploy.0 = Debug|x86
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|ARM.ActiveCfg = Release|ARM
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|ARM.Build.0 = Release|ARM
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|ARM.Deploy.0 = Release|ARM
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|ARM64.ActiveCfg = Release|ARM64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|ARM64.Build.0 = Release|ARM64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|ARM64.Deploy.0 = Release|ARM64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|x64.ActiveCfg = Release|x64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|x64.Build.0 = Release|x64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|x64.Deploy.0 = Release|x64
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|x86.ActiveCfg = Release|x86
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|x86.Build.0 = Release|x86
+		{E9090420-0DCB-4FF5-9E62-86194836933D}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {5A865B0E-F5A9-40D5-A48A-54379DCB94EE}
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4
+		SolutionGuid = {D34150EC-7874-4670-AE03-CA0E319DC3B5}
 	EndGlobalSection
 EndGlobal

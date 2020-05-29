@@ -4,20 +4,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{F5726ED1-961C-4B74-91ED-C2ADC70EBF61}</ProjectGuid>
+    <ProjectGuid>{E9090420-0DCB-4FF5-9E62-86194836933D}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LiteralLifeChurch.LiveStreamingController</RootNamespace>
     <AssemblyName>LiteralLifeChurch.LiveStreamingController</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>application_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -65,6 +65,30 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -95,156 +119,25 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Enums\Azure\StatusType.cs" />
-    <Compile Include="Exceptions\Azure\AccessPolicyException.cs" />
-    <Compile Include="Exceptions\Azure\AssetException.cs" />
-    <Compile Include="Exceptions\Azure\AzureAuthenticationException.cs" />
-    <Compile Include="Exceptions\Azure\AzureException.cs" />
-    <Compile Include="Exceptions\Azure\LocatorException.cs" />
-    <Compile Include="Exceptions\Azure\ProgramException.cs" />
-    <Compile Include="Exceptions\Azure\ServiceStatusException.cs" />
-    <Compile Include="Exceptions\Azure\StartUpException.cs" />
-    <Compile Include="Exceptions\Azure\StatusesDoNotMatchException.cs" />
-    <Compile Include="Exceptions\LiveStreamingControllerException.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\Azure\DataCreation\CreateAccessPolicyModel.cs" />
-    <Compile Include="Models\Azure\DataCreation\CreateLocatorModel.cs" />
-    <Compile Include="Models\Azure\DataCreation\CreateProgramModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\AccessPolicyModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\AssetFileModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\LocatorModel.cs" />
-    <Compile Include="Models\Azure\Workflow\AssetFileStepWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\AssetStepWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\LocatorStepWorkflowModel.cs" />
-    <Compile Include="Models\Azure\IAzureModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\AssetModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\ChannelModel.cs" />
-    <Compile Include="Models\Azure\DataCreation\CreateAssetModel.cs" />
-    <Compile Include="Models\Azure\DataCreation\IDataCreationModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\EndpointModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\IMediaServicesModel.cs" />
-    <Compile Include="Models\Azure\MediaServices\ProgramModel.cs" />
-    <Compile Include="Models\Azure\Status\IStatusModel.cs" />
-    <Compile Include="Models\Azure\Status\ServiceStatusDesignUpdateModel.cs" />
-    <Compile Include="Models\Azure\Status\ServiceStatusModel.cs" />
-    <Compile Include="Models\Azure\Workflow\AccessPolicyStepWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\IAzureWorkflowModel.cs" />
-    <Compile Include="Models\Azure\Workflow\ProgramStepWorkflowModel.cs" />
-    <Compile Include="Models\Firebase\IFirebaseModel.cs" />
-    <Compile Include="Models\Firebase\MediaModel.cs" />
-    <Compile Include="Models\Firebase\Workflow\FirebaseStepWorkflowModel.cs" />
-    <Compile Include="Models\Firebase\Workflow\IFirebaseWorkflowModel.cs" />
-    <Compile Include="Models\IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\Azure\Authentication\AuthenticationConfigurationConstants.cs" />
-    <Compile Include="Repositories\Azure\Authentication\AuthenticationConfigurationRepository.cs" />
-    <Compile Include="Repositories\Azure\Authentication\TokenRepository.cs" />
-    <Compile Include="Repositories\Azure\MediaServices\MediaServicesConfigurationRepository.cs" />
-    <Compile Include="Repositories\Azure\MediaServices\MediaServicesConfigurationConstants.cs" />
-    <Compile Include="Repositories\Azure\MediaServices\MediaServicesRepository.cs" />
-    <Compile Include="Repositories\Firebase\FirebaseConfigurationConstants.cs" />
-    <Compile Include="Repositories\Firebase\FirebaseConfigurationRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Services\Azure\Authentication\AzureAuthenticationConstants.cs" />
-    <Compile Include="Services\Azure\Authentication\AzureAuthenticationService.cs" />
-    <Compile Include="Services\Azure\MediaServices\AssetFileService.cs" />
-    <Compile Include="Services\Azure\MediaServices\AssetService.cs" />
-    <Compile Include="Services\Azure\MediaServices\ChannelService.cs" />
-    <Compile Include="Services\Azure\MediaServices\AccessPolicyService.cs" />
-    <Compile Include="Services\Azure\MediaServices\LocatorService.cs" />
-    <Compile Include="Services\Azure\MediaServices\MediaService.cs" />
-    <Compile Include="Services\Azure\MediaServices\MediaServicesConstants.cs" />
-    <Compile Include="Services\Azure\MediaServices\ProgramService.cs" />
-    <Compile Include="Services\Azure\MediaServices\StreamingEndpointService.cs" />
-    <Compile Include="Services\Azure\Workflow.cs" />
-    <Compile Include="Services\Firebase\FirebaseConstants.cs" />
-    <Compile Include="Services\Firebase\FirebaseService.cs" />
-    <Compile Include="Services\Network\RetryRestClient.cs" />
-    <Compile Include="Utilities\HttpUtils.cs" />
-    <Compile Include="ViewModels\IViewModel.cs" />
-    <Compile Include="ViewModels\MainPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="application_TemporaryKey.pfx" />
-    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\AppList\AppList.scale-100.png" />
-    <Content Include="Assets\AppList\AppList.scale-125.png" />
-    <Content Include="Assets\AppList\AppList.scale-150.png" />
-    <Content Include="Assets\AppList\AppList.scale-200.png" />
-    <Content Include="Assets\AppList\AppList.scale-400.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-16.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-16_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-20.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-20_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-24.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-256.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-256_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-30.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-30_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-32.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-32_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-36.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-36_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-40.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-40_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-48.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-48_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-60.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-60_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-64.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-64_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-72.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-72_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-80.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-80_altform-unplated.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-96.png" />
-    <Content Include="Assets\AppList\AppList.targetsize-96_altform-unplated.png" />
-    <Content Include="Assets\Badge\Badge.scale-100.png" />
-    <Content Include="Assets\Badge\Badge.scale-125.png" />
-    <Content Include="Assets\Badge\Badge.scale-150.png" />
-    <Content Include="Assets\Badge\Badge.scale-200.png" />
-    <Content Include="Assets\Badge\Badge.scale-400.png" />
-    <Content Include="Assets\credits.txt" />
-    <Content Include="Assets\icon.svg" />
-    <Content Include="Assets\Large\Large310x310Logo.scale-100.png" />
-    <Content Include="Assets\Large\Large310x310Logo.scale-125.png" />
-    <Content Include="Assets\Large\Large310x310Logo.scale-150.png" />
-    <Content Include="Assets\Large\Large310x310Logo.scale-200.png" />
-    <Content Include="Assets\Large\Large310x310Logo.scale-400.png" />
-    <Content Include="Assets\Medium\Medium150x150Logo.scale-100.png" />
-    <Content Include="Assets\Medium\Medium150x150Logo.scale-125.png" />
-    <Content Include="Assets\Medium\Medium150x150Logo.scale-150.png" />
-    <Content Include="Assets\Medium\Medium150x150Logo.scale-200.png" />
-    <Content Include="Assets\Medium\Medium150x150Logo.scale-400.png" />
-    <Content Include="Assets\Small\Small71x71Logo.scale-100.png" />
-    <Content Include="Assets\Small\Small71x71Logo.scale-125.png" />
-    <Content Include="Assets\Small\Small71x71Logo.scale-150.png" />
-    <Content Include="Assets\Small\Small71x71Logo.scale-200.png" />
-    <Content Include="Assets\Small\Small71x71Logo.scale-400.png" />
-    <Content Include="Assets\SplashScreen\SplashScreen.scale-100.png" />
-    <Content Include="Assets\SplashScreen\SplashScreen.scale-125.png" />
-    <Content Include="Assets\SplashScreen\SplashScreen.scale-150.png" />
-    <Content Include="Assets\SplashScreen\SplashScreen.scale-200.png" />
-    <Content Include="Assets\SplashScreen\SplashScreen.scale-400.png" />
-    <Content Include="Assets\Store\StoreLogo.scale-100.png" />
-    <Content Include="Assets\Store\StoreLogo.scale-125.png" />
-    <Content Include="Assets\Store\StoreLogo.scale-150.png" />
-    <Content Include="Assets\Store\StoreLogo.scale-200.png" />
-    <Content Include="Assets\Store\StoreLogo.scale-400.png" />
-    <Content Include="Assets\Wide\Wide310x150Logo.scale-100.png" />
-    <Content Include="Assets\Wide\Wide310x150Logo.scale-125.png" />
-    <Content Include="Assets\Wide\Wide310x150Logo.scale-150.png" />
-    <Content Include="Assets\Wide\Wide310x150Logo.scale-200.png" />
-    <Content Include="Assets\Wide\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -257,23 +150,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Cloud.Firestore">
-      <Version>1.0.0-beta15</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.9</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="RestSharp">
-      <Version>106.6.2</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reactive">
-      <Version>4.1.2</Version>
+      <Version>6.2.9</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
