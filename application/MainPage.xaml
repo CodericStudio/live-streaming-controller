@@ -1,14 +1,74 @@
 ﻿<Page
     x:Class="LiteralLifeChurch.LiveStreamingController.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:application"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:esgee="using:esgeeFlatToggleSwitch"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Page.TopAppBar>
+        <CommandBar
+            DefaultLabelPosition="Right">
 
+            <AppBarButton
+                Icon="Refresh"
+                Name="RefreshButton"
+                x:Uid="RefreshButton" />
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    Icon="Setting"
+                    Name="SettingsButton"
+                    x:Uid="SettingsButton" />
+
+                <AppBarButton
+                    Icon="Delete"
+                    Name="StopAllButton"
+                    x:Uid="StopAllButton" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <Grid
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <esgee:FlatToggleSwitch
+            ContentAlignment="Center"
+            ContentFontSize="30"
+            Grid.Column="0"
+            Grid.Row="0"
+            IsOn="True"
+            Margin="0,5"
+            Name="ToggleSwitch"
+            Size="30"
+            SwitchWidth="200" />
+
+        <TextBlock
+            FontSize="24"
+            Grid.Column="0"
+            Grid.Row="1"
+            HorizontalTextAlignment="Center"
+            Padding="10"
+            TextWrapping="Wrap" />
+
+        <ProgressRing
+            Grid.Column="0"
+            Grid.Row="2"
+            IsActive="True"
+            Name="Spinner"
+            Visibility="Visible" />
     </Grid>
 </Page>
