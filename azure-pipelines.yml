@@ -1,0 +1,147 @@
+name: $(SourceBranchName) $(Rev:r)
+pr: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  - group: signing-certificate
+  - name: solution
+    value: '**/*.sln'
+  - name: buildPlatform
+    value: 'x86|x64|ARM'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: appxPackageDir
+    value: '$(build.artifactStagingDirectory)\AppxPackages\\'
+
+jobs:
+- job: build
+  condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  steps:
+  - task: NuGetToolInstaller@1
+    displayName: Install NuGet Packages
+
+  - task: NuGetCommand@2
+    displayName: Restore NuGet Packages
+    inputs:
+      restoreSolution: '$(solution)'
+
+  - task: DownloadSecureFile@1
+    name: secureFile
+    displayName: Get the PFX Signing Certificate
+    inputs:
+      secureFile: '$(signingCert.secureFilePath)'
+
+  - task: PowerShell@2
+    displayName: Add the PFX Certificate to the Certificate Store
+    inputs:
+      targetType: 'inline'
+      script: |
+        $pfxpath = '$(secureFile.secureFilePath)'
+        $password = '$(signingCert.password)'
+        
+        Add-Type -AssemblyName System.Security
+        $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+        $cert.Import($pfxpath, $password, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]"PersistKeySet")
+        $store = new-object system.security.cryptography.X509Certificates.X509Store -argumentlist "MY", CurrentUser
+        $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
+        $store.Add($cert)
+        $store.Close()
+
+  - task: VSBuild@1
+    displayName: Build Application
+    inputs:
+      platform: 'x86'
+      solution: '$(solution)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)"
+                    /p:AppxPackageDir="$(appxPackageDir)"
+                    /p:AppxBundle=Always
+                    /p:UapAppxPackageBuildMode=StoreUpload
+                    /p:AppxPackageSigningEnabled=true
+                    /p:PackageCertificateThumbprint="$(signingCert.thumbprint)" 
+                    /p:PackageCertificateKeyFile="$(secureFile.secureFilePath)"
+                    /p:PackageCertificatePassword="$(signingCert.password)"'
+
+  - task: CopyFiles@2
+    displayName: Copy Files to the Drop Folder
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '**\bin\$(BuildConfiguration)\**'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Artifacts
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+
+- job: deploy
+  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  steps:
+  - task: NuGetToolInstaller@1
+    displayName: Install NuGet Packages
+
+  - task: NuGetCommand@2
+    displayName: Restore NuGet Packages
+    inputs:
+      restoreSolution: '$(solution)'
+
+  - task: DownloadSecureFile@1
+    name: secureFile
+    displayName: Get the PFX Signing Certificate
+    inputs:
+      secureFile: '$(signingCert.secureFilePath)'
+
+  - task: PowerShell@2
+    displayName: Add the PFX Certificate to the Certificate Store
+    inputs:
+      targetType: 'inline'
+      script: |
+        $pfxpath = '$(secureFile.secureFilePath)'
+        $password = '$(signingCert.password)'
+        
+        Add-Type -AssemblyName System.Security
+        $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+        $cert.Import($pfxpath, $password, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]"PersistKeySet")
+        $store = new-object system.security.cryptography.X509Certificates.X509Store -argumentlist "MY", CurrentUser
+        $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
+        $store.Add($cert)
+        $store.Close()
+
+  - task: VSBuild@1
+    displayName: Build Application
+    inputs:
+      platform: 'x86'
+      solution: '$(solution)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)"
+                    /p:AppxPackageDir="$(appxPackageDir)"
+                    /p:AppxBundle=Always
+                    /p:UapAppxPackageBuildMode=StoreUpload
+                    /p:AppxPackageSigningEnabled=true
+                    /p:PackageCertificateThumbprint="$(signingCert.thumbprint)" 
+                    /p:PackageCertificateKeyFile="$(secureFile.secureFilePath)"
+                    /p:PackageCertificatePassword="$(signingCert.password)"'
+
+  - task: CopyFiles@2
+    displayName: Copy Files to the Drop Folder
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '**\bin\$(BuildConfiguration)\**'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Artifacts
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+
+  - task: AppCenterDistribute@3
+    displayName: Publish to Visual Studio App Center
+    inputs:
+      serverEndpoint: 'App Center'
+      appSlug: 'literal-life-church/Live-Streaming-Controller'
+      appFile: '$(build.artifactstagingdirectory)\AppxPackages\*.appxupload'
+      releaseNotesOption: 'input'
+      releaseNotesInput: '$(Build.SourceBranchName)'
+      destinationType: 'groups'
