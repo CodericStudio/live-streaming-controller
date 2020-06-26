@@ -19,6 +19,7 @@
 
             <CommandBar.SecondaryCommands>
                 <AppBarButton
+                    Click="GoToSettings"
                     Icon="Setting"
                     Name="SettingsButton"
                     x:Uid="SettingsButton" />

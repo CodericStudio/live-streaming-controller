@@ -1,0 +1,106 @@
+﻿<Page
+    x:Class="LiteralLifeChurch.LiveStreamingController.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.TopAppBar>
+        <CommandBar>
+            <CommandBar.Content>
+                <Button
+                    Click="OnBackClick"
+                    Name="BackButton"
+                    Style="{StaticResource NavigationBackButtonNormalStyle}"
+                    VerticalAlignment="Top" />
+            </CommandBar.Content>
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <StackPanel
+        Margin="16">
+        <TextBlock
+            Style="{StaticResource TitleTextBlockStyle}"
+            x:Uid="SettingsTitle" />
+
+        <TextBlock
+            Margin="0,8,0,0"
+            Style="{StaticResource BodyTextBlockStyle}"
+            x:Uid="SettingsDirections">
+            <Span><Run>This application is not designed to operate on its own. It requires an instance of the</Run> <Hyperlink
+                    NavigateUri="https://github.com/literal-life-church/live-streaming-api/">Live Streaming API</Hyperlink> <Run>to be installed and configured to work with your Azure Media Services account. Please follow the steps in the</Run> <Hyperlink
+                    NavigateUri="https://github.com/literal-life-church/live-streaming-api#installation">API installation guide</Hyperlink> <Run>to configure the backend services before setting up this controller application. Once your backend is running, please follow the steps in the</Run> <Hyperlink
+                    NavigateUri="https://github.com/literal-life-church/live-streaming-controller#setup">controller setup guide</Hyperlink> <Run>to learn how to populate the form below.</Run></Span>
+        </TextBlock>
+
+        <TextBox
+            Header="Host"
+            HorizontalAlignment="Left"
+            InputScope="Url"
+            Margin="0,24,0,0"
+            PlaceholderText="livestreamingapi.mychurch.com"
+            Width="400"
+            x:Name="Host" />
+
+        <TextBlock
+            Margin="0,4,0,0"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            x:Uid="HostCaption" />
+
+        <TextBox
+            Header="Streaming Endpoint Name"
+            HorizontalAlignment="Left"
+            InputScope="AlphanumericFullWidth"
+            Margin="0,24,0,0"
+            PlaceholderText="default"
+            Width="400"
+            x:Name="StreamingEndpoint" />
+
+        <TextBlock
+            Margin="0,4,0,0"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            x:Uid="StreamingEndpointCaption" />
+
+        <TextBox
+            Header="Live Event Names"
+            HorizontalAlignment="Left"
+            InputScope="AlphanumericFullWidth"
+            Margin="0,24,0,0"
+            PlaceholderText="video-streaming,audio-streaming"
+            Width="400"
+            x:Name="LiveEvents" />
+
+        <TextBlock
+            Margin="0,4,0,0"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            x:Uid="LiveEventsCaption" />
+
+        <PasswordBox
+            Header="API Key"
+            HorizontalAlignment="Left"
+            InputScope="AlphanumericFullWidth"
+            Margin="0,24,0,0"
+            Width="400"
+            x:Name="ApiKey" />
+
+        <TextBlock
+            Margin="0,4,0,0"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            x:Uid="ApiKeyCaption" />
+
+        <StackPanel
+            Orientation="Horizontal">
+            <Button
+                Click="OnSaveClick"
+                Margin="0,24"
+                x:Uid="SaveButton" />
+
+            <Button
+                Click="OnCancelClick"
+                Margin="24"
+                x:Uid="CancelButton" />
+        </StackPanel>
+    </StackPanel>
+</Page>

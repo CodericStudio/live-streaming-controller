@@ -8,5 +8,10 @@ namespace LiteralLifeChurch.LiveStreamingController
         {
             InitializeComponent();
         }
+
+        private void GoToSettings(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SettingsPage));
+        }
     }
 }
