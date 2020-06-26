@@ -123,6 +123,18 @@
   <data name="CancelButton.Content" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="DialogClose" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DialogContent" xml:space="preserve">
+    <value>You have made changes to these settings without saving. Do you want to discard your changes and go back to the previous screen?</value>
+  </data>
+  <data name="DialogPrimary" xml:space="preserve">
+    <value>Discard Changes</value>
+  </data>
+  <data name="DialogTitle" xml:space="preserve">
+    <value>Confirm Action</value>
+  </data>
   <data name="HostCaption.Text" xml:space="preserve">
     <value>Domain name of your instance of the Live Streaming API</value>
   </data>
