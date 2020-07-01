@@ -119,15 +119,22 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\ResourceStatusTypeEnum.cs" />
     <Compile Include="Exceptions\AppException.cs" />
     <Compile Include="Exceptions\NavigationException.cs" />
+    <Compile Include="Exceptions\ServerResponseException.cs" />
+    <Compile Include="Exceptions\StatusNotStableException.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Api\IApiModel.cs" />
+    <Compile Include="Models\Api\StatusModel.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\Settings\ISettingsModel.cs" />
     <Compile Include="Models\Settings\SettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Enums\ResourceStatusEnum.cs" />
+    <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="SettingsPage.xaml.cs">
@@ -169,6 +176,15 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>106.11.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reactive">
+      <Version>4.4.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

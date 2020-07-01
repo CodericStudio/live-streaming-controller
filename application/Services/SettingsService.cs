@@ -17,6 +17,21 @@ namespace LiteralLifeChurch.LiveStreamingController.Services
             localSettings = ApplicationData.Current.LocalSettings;
         }
 
+        public bool AreSettingsPopulated
+        {
+            get
+            {
+                SettingsModel storage = Storage;
+
+                bool isApiKeyPopulated = !string.IsNullOrWhiteSpace(storage.ApiKey);
+                bool isHostPopulated = !string.IsNullOrWhiteSpace(storage.Host);
+                bool isLiveEventsPopulated = !string.IsNullOrWhiteSpace(storage.LiveEventNames);
+                bool isStreamingEndpointPopulated = !string.IsNullOrWhiteSpace(storage.StreamingEndpointName);
+
+                return isApiKeyPopulated && isHostPopulated && isLiveEventsPopulated && isStreamingEndpointPopulated;
+            }
+        }
+
         public SettingsModel Storage
         {
             get

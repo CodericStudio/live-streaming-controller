@@ -13,13 +13,14 @@
             DefaultLabelPosition="Right">
 
             <AppBarButton
+                Click="OnRefreshClick"
                 Icon="Refresh"
                 Name="RefreshButton"
                 x:Uid="RefreshButton" />
 
             <CommandBar.SecondaryCommands>
                 <AppBarButton
-                    Click="GoToSettings"
+                    Click="OnSettingsClick"
                     Icon="Setting"
                     Name="SettingsButton"
                     x:Uid="SettingsButton" />
@@ -51,7 +52,7 @@
             ContentFontSize="30"
             Grid.Column="0"
             Grid.Row="0"
-            IsOn="True"
+            IsOn="False"
             Margin="0,5"
             Name="ToggleSwitch"
             Size="30"
@@ -62,7 +63,9 @@
             Grid.Column="0"
             Grid.Row="1"
             HorizontalTextAlignment="Center"
+            Name="StatusText"
             Padding="10"
+            Style="{StaticResource TitleTextBlockStyle}"
             TextWrapping="Wrap" />
 
         <ProgressRing

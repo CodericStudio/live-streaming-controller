@@ -141,6 +141,12 @@
   <data name="LiveEventsCaption.Text" xml:space="preserve">
     <value>Comma-seperated list of events to turn on and off in unison</value>
   </data>
+  <data name="NetworkError" xml:space="preserve">
+    <value>Network error. Please double-check your internet connection and application settings.</value>
+  </data>
+  <data name="NotSetUp" xml:space="preserve">
+    <value>Application is not setup. Please go to settings to configure.</value>
+  </data>
   <data name="RefreshButton.Label" xml:space="preserve">
     <value>Refresh</value>
   </data>
@@ -152,6 +158,21 @@
   </data>
   <data name="SettingsTitle.Text" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="StatusChecking" xml:space="preserve">
+    <value>Checking streaming service status...</value>
+  </data>
+  <data name="StatusError" xml:space="preserve">
+    <value>Service error, please refresh the status or use the Stop &amp;amp; Reset All option</value>
+  </data>
+  <data name="StatusStarting" xml:space="preserve">
+    <value>Turning on the streaming services</value>
+  </data>
+  <data name="StatusStopped" xml:space="preserve">
+    <value>Not ready to stream</value>
+  </data>
+  <data name="StatusStopping" xml:space="preserve">
+    <value>Turning off the streaming services</value>
   </data>
   <data name="StopAllButton.Label" xml:space="preserve">
     <value>Stop &amp; Reset All</value>

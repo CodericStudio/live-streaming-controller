@@ -125,7 +125,6 @@ namespace LiteralLifeChurch.LiveStreamingController
         private async Task ShowDialog()
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView();
-
             ContentDialog dialog = new ContentDialog
             {
                 Title = loader.GetString("DialogTitle"),
