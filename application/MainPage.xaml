@@ -56,7 +56,8 @@
             Margin="0,5"
             Name="ToggleSwitch"
             Size="30"
-            SwitchWidth="200" />
+            SwitchWidth="200"
+            Toggled="OnSwitchToggle" />
 
         <TextBlock
             FontSize="24"

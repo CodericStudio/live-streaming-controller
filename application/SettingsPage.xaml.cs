@@ -1,4 +1,4 @@
-﻿using LiteralLifeChurch.LiveStreamingController.Models.Settings;
+﻿using LiteralLifeChurch.LiveStreamingController.Models;
 using LiteralLifeChurch.LiveStreamingController.Services;
 using System;
 using System.Threading.Tasks;

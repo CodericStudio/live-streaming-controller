@@ -1,6 +1,6 @@
-﻿namespace LiteralLifeChurch.LiveStreamingController.Models.Settings
+﻿namespace LiteralLifeChurch.LiveStreamingController.Models
 {
-    public class SettingsModel : ISettingsModel
+    public class SettingsModel : IModel
     {
         public string ApiKey { get; set; }
 

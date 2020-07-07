@@ -153,6 +153,15 @@
   <data name="SaveButton.Content" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="ServicesError" xml:space="preserve">
+    <value>Streaming Service Error</value>
+  </data>
+  <data name="ServicesOff" xml:space="preserve">
+    <value>Streaming Services Are Off</value>
+  </data>
+  <data name="ServicesOn" xml:space="preserve">
+    <value>Streaming Services Are On</value>
+  </data>
   <data name="SettingsButton.Label" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -163,7 +172,10 @@
     <value>Checking streaming service status...</value>
   </data>
   <data name="StatusError" xml:space="preserve">
-    <value>Service error, please refresh the status or use the Stop &amp;amp; Reset All option</value>
+    <value>Service error, please refresh the status or use the Stop &amp; Reset All option</value>
+  </data>
+  <data name="StatusRunning" xml:space="preserve">
+    <value>Ready to stream</value>
   </data>
   <data name="StatusStarting" xml:space="preserve">
     <value>Turning on the streaming services</value>

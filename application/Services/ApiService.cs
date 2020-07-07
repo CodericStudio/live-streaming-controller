@@ -1,6 +1,5 @@
 ﻿using LiteralLifeChurch.LiveStreamingController.Exceptions;
-using LiteralLifeChurch.LiveStreamingController.Models.Api;
-using LiteralLifeChurch.LiveStreamingController.Models.Settings;
+using LiteralLifeChurch.LiveStreamingController.Models;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -50,6 +49,54 @@ namespace LiteralLifeChurch.LiveStreamingController.Services
                 }
                
                 subscriber.OnCompleted();
+                return Disposable.Empty;
+            });
+        }
+
+        public IObservable<StatusModel> Start()
+        {
+            return Observable.Create<StatusModel>(subscriber =>
+            {
+                RestClient client = new RestClient(BuildBaseUrl());
+                RestRequest request = new RestRequest("start");
+                AddQueryParamsToRequest(request);
+
+                IRestResponse response = client.Post(request);
+
+                if (!IsSuccessful(response))
+                {
+                    subscriber.OnError(new ServerResponseException());
+                    return Disposable.Empty;
+                }
+
+                StatusChangeModel model = JsonConvert.DeserializeObject<StatusChangeModel>(response.Content);
+                subscriber.OnNext(model.Status);
+                subscriber.OnCompleted();
+
+                return Disposable.Empty;
+            });
+        }
+
+        public IObservable<StatusModel> Stop()
+        {
+            return Observable.Create<StatusModel>(subscriber =>
+            {
+                RestClient client = new RestClient(BuildBaseUrl());
+                RestRequest request = new RestRequest("stop");
+                AddQueryParamsToRequest(request);
+
+                IRestResponse response = client.Delete(request);
+
+                if (!IsSuccessful(response))
+                {
+                    subscriber.OnError(new ServerResponseException());
+                    return Disposable.Empty;
+                }
+
+                StatusChangeModel model = JsonConvert.DeserializeObject<StatusChangeModel>(response.Content);
+                subscriber.OnNext(model.Status);
+                subscriber.OnCompleted();
+
                 return Disposable.Empty;
             });
         }

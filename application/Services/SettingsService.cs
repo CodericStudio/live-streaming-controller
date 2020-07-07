@@ -1,4 +1,4 @@
-﻿using LiteralLifeChurch.LiveStreamingController.Models.Settings;
+﻿using LiteralLifeChurch.LiveStreamingController.Models;
 using Windows.Storage;
 
 namespace LiteralLifeChurch.LiveStreamingController.Services
