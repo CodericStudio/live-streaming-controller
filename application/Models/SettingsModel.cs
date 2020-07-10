@@ -8,6 +8,10 @@
 
         public string LiveEventNames { get; set; }
 
+        public int PollingInterval { get; set; }
+
+        public bool PollingIntervalEnabled { get; set; }
+
         public string StreamingEndpointName { get; set; }
     }
 }

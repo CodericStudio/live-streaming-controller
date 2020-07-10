@@ -1,10 +1,12 @@
 ﻿using LiteralLifeChurch.LiveStreamingController.Models;
 using LiteralLifeChurch.LiveStreamingController.Services;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 namespace LiteralLifeChurch.LiveStreamingController
@@ -53,6 +55,28 @@ namespace LiteralLifeChurch.LiveStreamingController
             EnableSaveButtonIfFormIsValid();
         }
 
+        private void OnPollingIntervalEnabledChecked(object sender, RoutedEventArgs e)
+        {
+            PollingInterval.IsEnabled = true;
+            EnableSaveButtonIfFormIsValid();
+        }
+
+        private void OnPollingIntervalEnabledUnchecked(object sender, RoutedEventArgs e)
+        {
+            PollingInterval.IsEnabled = false;
+            EnableSaveButtonIfFormIsValid();
+        }
+
+        private void OnPollingIntervalChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            EnableSaveButtonIfFormIsValid();
+        }
+
+        private void OnPollingIntervalWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            EnableSaveButtonIfFormIsValid();
+        }
+
         private void OnStreamingEndpointChanged(object sender, TextChangedEventArgs e)
         {
             EnableSaveButtonIfFormIsValid();
@@ -60,11 +84,24 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
         {
+            int interval;
+
+            try
+            {
+                interval = Convert.ToInt32(PollingInterval.Text);
+            }
+            catch (Exception)
+            {
+                interval = 1;
+            }
+
             settings.Storage = new SettingsModel
             {
                 ApiKey = ApiKey.Password,
                 Host = Host.Text,
                 LiveEventNames = LiveEvents.Text,
+                PollingInterval = interval,
+                PollingIntervalEnabled = PollingIntervalEnabled.IsChecked == true,
                 StreamingEndpointName = StreamingEndpoint.Text
             };
 
@@ -89,9 +126,14 @@ namespace LiteralLifeChurch.LiveStreamingController
             bool isApiKeySame = ApiKey.Password == model.ApiKey;
             bool isHostSame = Host.Text == model.Host;
             bool isLiveEventsSame = LiveEvents.Text == model.LiveEventNames;
+            bool isPollingIntervalSame = PollingInterval.Text == model.PollingInterval.ToString();
+            bool isPollingIntervalEnabledSame = PollingIntervalEnabled.IsChecked == model.PollingIntervalEnabled;
             bool isStreamingEndpointSame = StreamingEndpoint.Text == model.StreamingEndpointName;
 
-            if (isApiKeySame && isHostSame && isLiveEventsSame && isStreamingEndpointSame)
+            bool isFormSame = isApiKeySame && isHostSame && isLiveEventsSame;
+            isFormSame &= isPollingIntervalSame && isPollingIntervalEnabledSame && isStreamingEndpointSame;
+
+            if (isFormSame)
             {
                 OnBackRequested();
             }
@@ -106,9 +148,16 @@ namespace LiteralLifeChurch.LiveStreamingController
             bool isApiKeyValid = !string.IsNullOrWhiteSpace(ApiKey.Password);
             bool isHostValid = !string.IsNullOrWhiteSpace(Host.Text) && Uri.IsWellFormedUriString($"https://{Host.Text}/", UriKind.Absolute);
             bool isLiveEventsValid = !string.IsNullOrWhiteSpace(LiveEvents.Text);
+            bool isIntervalValid = true;
             bool isStreamingEndpointValid = !string.IsNullOrWhiteSpace(StreamingEndpoint.Text);
 
-            SaveButton.IsEnabled = isApiKeyValid && isHostValid && isLiveEventsValid && isStreamingEndpointValid;
+            if (PollingIntervalEnabled.IsChecked == true)
+            {
+                double value = PollingInterval.Value;
+                isIntervalValid = 1.0 <= value && value <= 1000.0;
+            }
+
+            SaveButton.IsEnabled = isApiKeyValid && isHostValid && isLiveEventsValid && isIntervalValid && isStreamingEndpointValid;
         }
 
         private void InitializeForm()
@@ -117,6 +166,9 @@ namespace LiteralLifeChurch.LiveStreamingController
             ApiKey.Password = model.ApiKey;
             Host.Text = model.Host;
             LiveEvents.Text = model.LiveEventNames;
+            PollingInterval.IsEnabled = model.PollingIntervalEnabled;
+            PollingInterval.Text = model.PollingInterval.ToString();
+            PollingIntervalEnabled.IsChecked = model.PollingIntervalEnabled;
             StreamingEndpoint.Text = model.StreamingEndpointName;
 
             EnableSaveButtonIfFormIsValid();

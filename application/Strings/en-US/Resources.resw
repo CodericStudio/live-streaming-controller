@@ -147,6 +147,9 @@
   <data name="NotSetUp" xml:space="preserve">
     <value>Application is not setup. Please go to settings to configure.</value>
   </data>
+  <data name="PollingIntervalCaption.Text" xml:space="preserve">
+    <value>Update the service status to ensure this application accurately reflects the correct state, even if changed elsewhere</value>
+  </data>
   <data name="RefreshButton.Label" xml:space="preserve">
     <value>Refresh</value>
   </data>

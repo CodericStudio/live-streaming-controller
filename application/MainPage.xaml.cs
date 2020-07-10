@@ -21,6 +21,7 @@ namespace LiteralLifeChurch.LiveStreamingController
         private static readonly double SwitchOpaque = 1.0;
         private static readonly double SwitchTranspatent = 0.3;
 
+        IDisposable HeartBeatHandle;
         private bool IsSwitchOn;
         private bool WasSwitchedByProgram = true;
 
@@ -35,6 +36,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 
             IsSwitchOn = ToggleSwitch.IsOn;
             SetupUi();
+            InitializeHeartBeat();
         }
 
         private void OnRefreshClick(object sender, RoutedEventArgs e)
@@ -44,6 +46,11 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void OnSettingsClick(object sender, RoutedEventArgs e)
         {
+            if (HeartBeatHandle != null)
+            {
+                HeartBeatHandle.Dispose();
+            }
+
             Frame.Navigate(typeof(SettingsPage));
         }
 
@@ -57,6 +64,11 @@ namespace LiteralLifeChurch.LiveStreamingController
                 return;
             }
 
+            if (HeartBeatHandle != null)
+            {
+                HeartBeatHandle.Dispose();
+            }
+
             Spinner.Visibility = Visibility.Visible;
             ToggleSwitch.IsEnabled = false;
             ToggleSwitch.Opacity = SwitchTranspatent;
@@ -64,12 +76,12 @@ namespace LiteralLifeChurch.LiveStreamingController
             if (toggle.IsOn)
             {
                 StatusText.Text = ResourceLoader.GetString("StatusStarting");
-                MonitorObservable(Api.Start(), true);
+                MonitorObservable(Api.Start(), true, true);
             }
             else
             {
                 StatusText.Text = ResourceLoader.GetString("StatusStopping");
-                MonitorObservable(Api.Stop(), true);
+                MonitorObservable(Api.Stop(), true, true);
             }
         }
 
@@ -82,12 +94,12 @@ namespace LiteralLifeChurch.LiveStreamingController
             ToggleSwitch.IsEnabled = false;
             ToggleSwitch.Opacity = SwitchTranspatent;
 
-            MonitorObservable(Api.GetStatusUntilStable(), false);
+            MonitorObservable(Api.GetStatusUntilStable(), false, false);
         }
 
         private NotificationContentModel GenerateNotificationText(ResourceStatusEnum status)
         {
-            switch(status)
+            switch (status)
             {
                 case ResourceStatusEnum.Running:
                     return new NotificationContentModel
@@ -112,6 +124,23 @@ namespace LiteralLifeChurch.LiveStreamingController
             }
         }
 
+        private void InitializeHeartBeat()
+        {
+            if (!Settings.AreSettingsPopulated || !Settings.Storage.PollingIntervalEnabled)
+            {
+                return;
+            }
+
+            HeartBeatHandle = Observable
+                .Interval(TimeSpan.FromMinutes(Settings.Storage.PollingInterval))
+                .SubscribeOn(NewThreadScheduler.Default)
+                .ObserveOnDispatcher()
+                .Subscribe(time =>
+                {
+                    FetchStatus();
+                });
+        }
+
         private string MapStatus(ResourceStatusEnum status)
         {
             switch (status)
@@ -133,7 +162,7 @@ namespace LiteralLifeChurch.LiveStreamingController
             }
         }
 
-        private void MonitorObservable(IObservable<StatusModel> observable, bool showNotification)
+        private void MonitorObservable(IObservable<StatusModel> observable, bool showNotification, bool restartHeartBeat)
         {
             observable
                 .SubscribeOn(NewThreadScheduler.Default)
@@ -146,6 +175,11 @@ namespace LiteralLifeChurch.LiveStreamingController
                     if (showNotification)
                     {
                         Notifications.ShowNotification(GenerateNotificationText(outcome.Summary.Name));
+                    }
+
+                    if (restartHeartBeat)
+                    {
+                        InitializeHeartBeat();
                     }
                 }, error =>
                 {

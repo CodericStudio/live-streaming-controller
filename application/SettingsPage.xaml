@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -96,6 +97,41 @@
 
         <StackPanel
             Orientation="Horizontal">
+
+            <muxc:NumberBox
+                AcceptsExpression="False"
+                Header="Polling Interval (in Minutes)"
+                HorizontalAlignment="Left"
+                LargeChange="1"
+                Margin="0,24,0,0"
+                Maximum="1000"
+                Minimum="1"
+                Name="PollingInterval"
+                PlaceholderText="5"
+                SmallChange="1"
+                SpinButtonPlacementMode="Compact"
+                ValidationMode="InvalidInputOverwritten"
+                ValueChanged="OnPollingIntervalChanged"
+                PointerWheelChanged="OnPollingIntervalWheelChanged"
+                Width="400" />
+
+            <CheckBox
+                Checked="OnPollingIntervalEnabledChecked"
+                Content="Enabled"
+                Margin="16,0,0,0"
+                Name="PollingIntervalEnabled"
+                Unchecked="OnPollingIntervalEnabledUnchecked"
+                VerticalAlignment="Bottom" />
+        </StackPanel>
+
+        <TextBlock
+            Margin="0,4,0,0"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            x:Uid="PollingIntervalCaption" />
+
+        <StackPanel
+            Orientation="Horizontal">
+
             <Button
                 Click="OnSaveClick"
                 Margin="0,24"
