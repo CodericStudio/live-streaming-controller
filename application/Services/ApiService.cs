@@ -25,7 +25,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services
                 bool isStable = false;
 
                 RestClient client = new RestClient(BuildBaseUrl());
-                RestRequest request = new RestRequest("status");
+                RestRequest request = new RestRequest();
                 AddQueryParamsToRequest(request);
 
                 while (!isStable)
@@ -58,7 +58,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services
             return Observable.Create<StatusModel>(subscriber =>
             {
                 RestClient client = new RestClient(BuildBaseUrl());
-                RestRequest request = new RestRequest("start");
+                RestRequest request = new RestRequest();
                 AddQueryParamsToRequest(request);
 
                 IRestResponse response = client.Post(request);
@@ -82,7 +82,7 @@ namespace LiteralLifeChurch.LiveStreamingController.Services
             return Observable.Create<StatusModel>(subscriber =>
             {
                 RestClient client = new RestClient(BuildBaseUrl());
-                RestRequest request = new RestRequest("stop");
+                RestRequest request = new RestRequest();
                 AddQueryParamsToRequest(request);
 
                 IRestResponse response = client.Delete(request);
