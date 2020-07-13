@@ -9,7 +9,7 @@
   <Identity
     Name="LiteralLifeChurch.LiveStreamingController"
     Publisher="CN=oliverspryn"
-    Version="0.0.1.0" />
+    Version="2.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="9d135486-5087-4146-a240-f660ceb02bfd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

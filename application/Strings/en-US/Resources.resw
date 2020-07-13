@@ -201,4 +201,7 @@
   <data name="ToggleSwitch.OnContent" xml:space="preserve">
     <value>On</value>
   </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
 </root>

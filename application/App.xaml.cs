@@ -1,8 +1,10 @@
 ﻿using LiteralLifeChurch.LiveStreamingController.Constants;
 using LiteralLifeChurch.LiveStreamingController.Exceptions;
+using LiteralLifeChurch.LiveStreamingController.Services;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using System.Collections.Generic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -18,11 +20,7 @@ namespace LiteralLifeChurch.LiveStreamingController
             InitializeComponent();
             Suspending += OnSuspending;
 
-            AppCenter.Start(SecretsConstants.AppCenterSecret,
-                   typeof(Analytics),
-                   typeof(Crashes));
-
-            Analytics.TrackEvent(AnalyticsConstants.AppStart);
+            InitializeAnalytics();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -58,5 +56,23 @@ namespace LiteralLifeChurch.LiveStreamingController
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
         }
+
+        // region Helper Methods
+
+        private void InitializeAnalytics()
+        {
+            AppCenter.Start(SecretsConstants.AppCenterSecret,
+                   typeof(Analytics),
+                   typeof(Crashes));
+
+            Dictionary<string, string> args = new Dictionary<string, string>
+            {
+                { AnalyticsConstants.KeyVersion, VersionService.GetVersion() }
+            };
+
+            Analytics.TrackEvent(AnalyticsConstants.AppStart, args);
+        }
+
+        // endregion
     }
 }

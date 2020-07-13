@@ -25,6 +25,7 @@ namespace LiteralLifeChurch.LiveStreamingController
             InitializeComponent();
             Analytics.TrackEvent(AnalyticsConstants.ViewedSettingsScreen);
             InitializeForm();
+            InitializeVersion();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -114,7 +115,7 @@ namespace LiteralLifeChurch.LiveStreamingController
             {
                 Dictionary<string, string> args = new Dictionary<string, string>
                 {
-                    { "Interval", interval.ToString() }
+                    { AnalyticsConstants.KeyInterval, interval.ToString() }
                 };
 
                 Analytics.TrackEvent(AnalyticsConstants.StatusPollingEnabled, args);
@@ -192,6 +193,12 @@ namespace LiteralLifeChurch.LiveStreamingController
             StreamingEndpoint.Text = model.StreamingEndpointName;
 
             EnableSaveButtonIfFormIsValid();
+        }
+
+        private void InitializeVersion()
+        {
+            ResourceLoader loader = ResourceLoader.GetForCurrentView();
+            Version.Text = string.Format("{0} {1}", loader.GetString("Version"), VersionService.GetVersion());
         }
 
         private async Task ShowDialog()

@@ -140,6 +140,7 @@
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\VersionService.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>

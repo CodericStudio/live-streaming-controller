@@ -143,5 +143,10 @@
                 Margin="24"
                 x:Uid="CancelButton" />
         </StackPanel>
+
+        <TextBlock
+            Margin="0,16,0,0"
+            Name="Version"
+            Style="{StaticResource BodyTextBlockStyle}" />
     </StackPanel>
 </Page>
