@@ -1,7 +1,9 @@
 ﻿using esgeeFlatToggleSwitch;
+using LiteralLifeChurch.LiveStreamingController.Constants;
 using LiteralLifeChurch.LiveStreamingController.Enums;
 using LiteralLifeChurch.LiveStreamingController.Models;
 using LiteralLifeChurch.LiveStreamingController.Services;
+using Microsoft.AppCenter.Analytics;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -28,6 +30,7 @@ namespace LiteralLifeChurch.LiveStreamingController
         public MainPage()
         {
             InitializeComponent();
+            Analytics.TrackEvent(AnalyticsConstants.ViewedMainScreen);
 
             Api = new ApiService();
             Notifications = new NotificationService();
@@ -41,6 +44,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void OnRefreshClick(object sender, RoutedEventArgs e)
         {
+            Analytics.TrackEvent(AnalyticsConstants.ManualStatusRefresh);
             FetchStatus();
         }
 
@@ -52,6 +56,23 @@ namespace LiteralLifeChurch.LiveStreamingController
             }
 
             Frame.Navigate(typeof(SettingsPage));
+        }
+
+        private void OnStopAllClick(object sender, RoutedEventArgs e)
+        {
+            Analytics.TrackEvent(AnalyticsConstants.ServicesForcefullyStopped);
+
+            if (HeartBeatHandle != null)
+            {
+                HeartBeatHandle.Dispose();
+            }
+
+            SetSwitchState(false);
+            Spinner.Visibility = Visibility.Visible;
+            ToggleSwitch.IsEnabled = false;
+            ToggleSwitch.Opacity = SwitchTranspatent;
+            StatusText.Text = ResourceLoader.GetString("StatusStopping");
+            MonitorObservable(Api.Stop(), true, true);
         }
 
         private void OnSwitchToggle(object sender, RoutedEventArgs e)
@@ -76,11 +97,13 @@ namespace LiteralLifeChurch.LiveStreamingController
             if (toggle.IsOn)
             {
                 StatusText.Text = ResourceLoader.GetString("StatusStarting");
+                Analytics.TrackEvent(AnalyticsConstants.ServicesStarted);
                 MonitorObservable(Api.Start(), true, true);
             }
             else
             {
                 StatusText.Text = ResourceLoader.GetString("StatusStopping");
+                Analytics.TrackEvent(AnalyticsConstants.ServicesStopped);
                 MonitorObservable(Api.Stop(), true, true);
             }
         }
@@ -194,6 +217,8 @@ namespace LiteralLifeChurch.LiveStreamingController
                 });
         }
 
+        // Used to bypass a stange animation which happens whenever you
+        // change the switch state to the same state it was already in
         private void SetSwitchState(bool isOn)
         {
             if (isOn == IsSwitchOn)

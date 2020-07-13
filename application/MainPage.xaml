@@ -26,6 +26,7 @@
                     x:Uid="SettingsButton" />
 
                 <AppBarButton
+                    Click="OnStopAllClick"
                     Icon="Delete"
                     Name="StopAllButton"
                     x:Uid="StopAllButton" />

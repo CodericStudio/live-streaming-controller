@@ -1,4 +1,8 @@
-﻿using LiteralLifeChurch.LiveStreamingController.Exceptions;
+﻿using LiteralLifeChurch.LiveStreamingController.Constants;
+using LiteralLifeChurch.LiveStreamingController.Exceptions;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -13,6 +17,12 @@ namespace LiteralLifeChurch.LiveStreamingController
         {
             InitializeComponent();
             Suspending += OnSuspending;
+
+            AppCenter.Start(SecretsConstants.AppCenterSecret,
+                   typeof(Analytics),
+                   typeof(Crashes));
+
+            Analytics.TrackEvent(AnalyticsConstants.AppStart);
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)

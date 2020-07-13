@@ -5,6 +5,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  - group: appcenter
   - group: signing-certificate
   - name: solution
     value: '**/*.sln'
@@ -48,6 +49,15 @@ jobs:
         $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
         $store.Add($cert)
         $store.Close()
+
+  - task: PowerShell@2
+    displayName: Import Build Secrets
+    inputs:
+      targetType: 'inline'
+      script: |
+        $path = "$(system.defaultworkingdirectory)\application\Constants\SecretsConstants.cs"
+        $content = Get-Content -path $path
+        $content -Replace '00000000-0000-0000-0000-000000000000', '$(sdkSecret)' | Out-File $path
 
   - task: VSBuild@1
     displayName: Build Application
@@ -108,6 +118,15 @@ jobs:
         $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
         $store.Add($cert)
         $store.Close()
+
+  - task: PowerShell@2
+    displayName: Import Build Secrets
+    inputs:
+      targetType: 'inline'
+      script: |
+        $path = "$(system.defaultworkingdirectory)\application\Constants\SecretsConstants.cs"
+        $content = Get-Content -path $path
+        $content -Replace '00000000-0000-0000-0000-000000000000', '$(sdkSecret)' | Out-File $path
 
   - task: VSBuild@1
     displayName: Build Application

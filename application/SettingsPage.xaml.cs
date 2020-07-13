@@ -1,7 +1,10 @@
-﻿using LiteralLifeChurch.LiveStreamingController.Models;
+﻿using LiteralLifeChurch.LiveStreamingController.Constants;
+using LiteralLifeChurch.LiveStreamingController.Models;
 using LiteralLifeChurch.LiveStreamingController.Services;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -20,6 +23,7 @@ namespace LiteralLifeChurch.LiveStreamingController
             settings = new SettingsService();
 
             InitializeComponent();
+            Analytics.TrackEvent(AnalyticsConstants.ViewedSettingsScreen);
             InitializeForm();
         }
 
@@ -84,6 +88,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
         {
+            Analytics.TrackEvent(AnalyticsConstants.SettingsSaved);
             int interval;
 
             try
@@ -104,6 +109,20 @@ namespace LiteralLifeChurch.LiveStreamingController
                 PollingIntervalEnabled = PollingIntervalEnabled.IsChecked == true,
                 StreamingEndpointName = StreamingEndpoint.Text
             };
+
+            if (PollingIntervalEnabled.IsChecked == true)
+            {
+                Dictionary<string, string> args = new Dictionary<string, string>
+                {
+                    { "Interval", interval.ToString() }
+                };
+
+                Analytics.TrackEvent(AnalyticsConstants.StatusPollingEnabled, args);
+            }
+            else
+            {
+                Analytics.TrackEvent(AnalyticsConstants.StatusPollingDisabled);
+            }
 
             OnBackRequested();
         }
@@ -135,6 +154,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 
             if (isFormSame)
             {
+                Analytics.TrackEvent(AnalyticsConstants.SettingsCanceled);
                 OnBackRequested();
             }
             else
@@ -189,6 +209,7 @@ namespace LiteralLifeChurch.LiveStreamingController
 
             if (result == ContentDialogResult.Primary)
             {
+                Analytics.TrackEvent(AnalyticsConstants.SettingsCanceled);
                 OnBackRequested();
             }
         }
