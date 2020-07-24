@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="LiteralLifeChurch.LiveStreamingController"
-    Publisher="CN=oliverspryn"
+    Name="18199ForwardFourInnovatio.LiveStreamingController"
+    Publisher="CN=B3D9E7FE-4841-4F14-A9DE-02924E327A8D"
     Version="2.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="9d135486-5087-4146-a240-f660ceb02bfd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="404e499e-e9a1-41cb-ab12-eba96dd37d32" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Live Streaming Controller</DisplayName>
