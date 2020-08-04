@@ -20,133 +20,135 @@
         </CommandBar>
     </Page.TopAppBar>
 
-    <StackPanel
-        Margin="16">
-        <TextBlock
-            Style="{StaticResource TitleTextBlockStyle}"
-            x:Uid="SettingsTitle" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel
+            Margin="16">
+            <TextBlock
+                Style="{StaticResource TitleTextBlockStyle}"
+                x:Uid="SettingsTitle" />
 
-        <TextBlock
-            Margin="0,8,0,0"
-            Style="{StaticResource BodyTextBlockStyle}"
-            x:Uid="SettingsDirections">
+            <TextBlock
+                Margin="0,8,0,0"
+                Style="{StaticResource BodyTextBlockStyle}"
+                x:Uid="SettingsDirections">
             <Span><Run>This application is not designed to operate on its own. It requires an instance of the</Run> <Hyperlink
-                    NavigateUri="https://github.com/literal-life-church/live-streaming-api/">Live Streaming API</Hyperlink> <Run>to be installed and configured to work with your Azure Media Services account. Please follow the steps in the</Run> <Hyperlink
-                    NavigateUri="https://github.com/literal-life-church/live-streaming-api#installation">API installation guide</Hyperlink> <Run>to configure the backend services before setting up this controller application. Once your backend is running, please follow the steps in the</Run> <Hyperlink
-                    NavigateUri="https://github.com/literal-life-church/live-streaming-controller#setup">controller setup guide</Hyperlink> <Run>to learn how to populate the form below.</Run></Span>
-        </TextBlock>
+                        NavigateUri="https://github.com/literal-life-church/live-streaming-api/">Live Streaming API</Hyperlink> <Run>to be installed and configured to work with your Azure Media Services account. Please follow the steps in the</Run> <Hyperlink
+                        NavigateUri="https://github.com/literal-life-church/live-streaming-api#installation">API installation guide</Hyperlink> <Run>to configure the backend services before setting up this controller application. Once your backend is running, please follow the steps in the</Run> <Hyperlink
+                        NavigateUri="https://github.com/literal-life-church/live-streaming-controller#setup">controller setup guide</Hyperlink> <Run>to learn how to populate the form below.</Run></Span>
+            </TextBlock>
 
-        <TextBox
-            Header="Host"
-            HorizontalAlignment="Left"
-            InputScope="Url"
-            Margin="0,24,0,0"
-            PlaceholderText="livestreamingapi.mychurch.com"
-            TextChanged="OnHostChanged"
-            Width="400"
-            x:Name="Host" />
-
-        <TextBlock
-            Margin="0,4,0,0"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            x:Uid="HostCaption" />
-
-        <TextBox
-            Header="Streaming Endpoint Name"
-            HorizontalAlignment="Left"
-            InputScope="AlphanumericFullWidth"
-            Margin="0,24,0,0"
-            PlaceholderText="default"
-            TextChanged="OnStreamingEndpointChanged"
-            Width="400"
-            x:Name="StreamingEndpoint" />
-
-        <TextBlock
-            Margin="0,4,0,0"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            x:Uid="StreamingEndpointCaption" />
-
-        <TextBox
-            Header="Live Event Names"
-            HorizontalAlignment="Left"
-            InputScope="AlphanumericFullWidth"
-            Margin="0,24,0,0"
-            PlaceholderText="video-streaming,audio-streaming"
-            TextChanged="OnLiveEventsChanged"
-            Width="400"
-            x:Name="LiveEvents" />
-
-        <TextBlock
-            Margin="0,4,0,0"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            x:Uid="LiveEventsCaption" />
-
-        <PasswordBox
-            Header="API Key"
-            HorizontalAlignment="Left"
-            InputScope="AlphanumericFullWidth"
-            Margin="0,24,0,0"
-            PasswordChanged="OnApiKeyChanged"
-            Width="400"
-            x:Name="ApiKey" />
-
-        <TextBlock
-            Margin="0,4,0,0"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            x:Uid="ApiKeyCaption" />
-
-        <StackPanel
-            Orientation="Horizontal">
-
-            <muxc:NumberBox
-                AcceptsExpression="False"
-                Header="Polling Interval (in Minutes)"
+            <TextBox
+                Header="Host"
                 HorizontalAlignment="Left"
-                LargeChange="1"
+                InputScope="Url"
                 Margin="0,24,0,0"
-                Maximum="1000"
-                Minimum="1"
-                Name="PollingInterval"
-                PlaceholderText="5"
-                SmallChange="1"
-                SpinButtonPlacementMode="Compact"
-                ValidationMode="InvalidInputOverwritten"
-                ValueChanged="OnPollingIntervalChanged"
-                PointerWheelChanged="OnPollingIntervalWheelChanged"
-                Width="400" />
+                PlaceholderText="livestreamingapi.mychurch.com"
+                TextChanged="OnHostChanged"
+                Width="350"
+                x:Name="Host" />
 
-            <CheckBox
-                Checked="OnPollingIntervalEnabledChecked"
-                Content="Enabled"
-                Margin="16,0,0,0"
-                Name="PollingIntervalEnabled"
-                Unchecked="OnPollingIntervalEnabledUnchecked"
-                VerticalAlignment="Bottom" />
+            <TextBlock
+                Margin="0,4,0,0"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                x:Uid="HostCaption" />
+
+            <TextBox
+                Header="Streaming Endpoint Name"
+                HorizontalAlignment="Left"
+                InputScope="AlphanumericFullWidth"
+                Margin="0,24,0,0"
+                PlaceholderText="default"
+                TextChanged="OnStreamingEndpointChanged"
+                Width="350"
+                x:Name="StreamingEndpoint" />
+
+            <TextBlock
+                Margin="0,4,0,0"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                x:Uid="StreamingEndpointCaption" />
+
+            <TextBox
+                Header="Live Event Names"
+                HorizontalAlignment="Left"
+                InputScope="AlphanumericFullWidth"
+                Margin="0,24,0,0"
+                PlaceholderText="video-streaming,audio-streaming"
+                TextChanged="OnLiveEventsChanged"
+                Width="350"
+                x:Name="LiveEvents" />
+
+            <TextBlock
+                Margin="0,4,0,0"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                x:Uid="LiveEventsCaption" />
+
+            <PasswordBox
+                Header="API Key"
+                HorizontalAlignment="Left"
+                InputScope="AlphanumericFullWidth"
+                Margin="0,24,0,0"
+                PasswordChanged="OnApiKeyChanged"
+                Width="350"
+                x:Name="ApiKey" />
+
+            <TextBlock
+                Margin="0,4,0,0"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                x:Uid="ApiKeyCaption" />
+
+            <StackPanel
+                Orientation="Horizontal">
+
+                <muxc:NumberBox
+                    AcceptsExpression="False"
+                    Header="Polling Interval (in Minutes)"
+                    HorizontalAlignment="Left"
+                    LargeChange="1"
+                    Margin="0,24,0,0"
+                    Maximum="1000"
+                    Minimum="1"
+                    Name="PollingInterval"
+                    PlaceholderText="5"
+                    SmallChange="1"
+                    SpinButtonPlacementMode="Compact"
+                    ValidationMode="InvalidInputOverwritten"
+                    ValueChanged="OnPollingIntervalChanged"
+                    PointerWheelChanged="OnPollingIntervalWheelChanged"
+                    Width="350" />
+
+                <CheckBox
+                    Checked="OnPollingIntervalEnabledChecked"
+                    Content="Enabled"
+                    Margin="16,0,0,0"
+                    Name="PollingIntervalEnabled"
+                    Unchecked="OnPollingIntervalEnabledUnchecked"
+                    VerticalAlignment="Bottom" />
+            </StackPanel>
+
+            <TextBlock
+                Margin="0,4,0,0"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                x:Uid="PollingIntervalCaption" />
+
+            <StackPanel
+                Orientation="Horizontal">
+
+                <Button
+                    Click="OnSaveClick"
+                    Margin="0,24"
+                    Name="SaveButton"
+                    x:Uid="SaveButton" />
+
+                <Button
+                    Click="OnCancelClick"
+                    Margin="24"
+                    x:Uid="CancelButton" />
+            </StackPanel>
+
+            <TextBlock
+                Margin="0,16,0,0"
+                Name="Version"
+                Style="{StaticResource BodyTextBlockStyle}" />
         </StackPanel>
-
-        <TextBlock
-            Margin="0,4,0,0"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            x:Uid="PollingIntervalCaption" />
-
-        <StackPanel
-            Orientation="Horizontal">
-
-            <Button
-                Click="OnSaveClick"
-                Margin="0,24"
-                Name="SaveButton"
-                x:Uid="SaveButton" />
-
-            <Button
-                Click="OnCancelClick"
-                Margin="24"
-                x:Uid="CancelButton" />
-        </StackPanel>
-
-        <TextBlock
-            Margin="0,16,0,0"
-            Name="Version"
-            Style="{StaticResource BodyTextBlockStyle}" />
-    </StackPanel>
+    </ScrollViewer>
 </Page>
